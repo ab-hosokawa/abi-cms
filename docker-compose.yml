@@ -1,0 +1,101 @@
+services:
+  reverse-proxy: # リバースプロキシとして動作するNginx
+    image: nginx:latest
+    container_name: reverse-proxy
+    ports:
+      - "8080:80"
+      - "8888:8888"
+    environment:
+      TZ: Asia/Tokyo # タイムゾーンを日本時間に設定
+    volumes:
+      - ./reverse-proxy/default.conf:/etc/nginx/conf.d/default.conf # カスタムNginx設定をマウント
+    depends_on:
+      - backend
+      - frontend
+      - database
+      - website
+    networks:
+      - cms_network
+
+  backend: # LaravelのバックエンドAPIサーバ
+    container_name: cms_backend
+    build:
+      context: ./backend # Dockerfileのあるディレクトリ
+    volumes:
+      - ./backend/src:/var/www/html/ # Laravelのソースコードをコンテナ内にマウント
+      # - backend_vendor:/var/www/html/vendor # vendorを分離
+    environment:
+      TZ: Asia/Tokyo # タイムゾーンを日本時間に設定
+      APP_ENV: local # 開発環境
+      APP_DEBUG: "true" # デバッグモードを有効化 (true を文字列にすることで正確なパース)
+      APP_KEY: ${LARAVEL_APP_KEY} # アプリケーションキー
+      DB_CONNECTION: mysql
+      DB_HOST: cms_db # データベースサービス名（Dockerネットワーク内で解決）
+      DB_PORT: 3306
+      DB_DATABASE: ${MYSQL_DATABASE}
+      DB_USERNAME: ${MYSQL_USER} 
+      DB_PASSWORD: ${MYSQL_PASSWORD}
+    depends_on:
+      - database
+    networks:
+      - cms_network
+
+  frontend: # Reactを利用したフロントエンドアプリケーション
+    build:
+      context: ./frontend # Dockerfileのあるディレクトリ
+    container_name: cms_frontend
+    environment:
+      TZ: Asia/Tokyo # タイムゾーンを日本時間に設定
+      API_URL: http://cms_backend # CMSのAPIエンドポイント
+    volumes:
+      - ./frontend:/app # フロントエンドのソースコードをコンテナ内にマウント
+      - frontend_node_modules:/app/node_modules # コンテナのnode_modulesをローカルに同期させない
+    command: ["npm", "run", "dev", "--", "--host"] # ローカル開発用の起動コマンド
+    networks:
+      - cms_network
+
+  database: # MySQLデータベース
+    image: mysql:8.0
+    container_name: cms_db
+    restart: always # コンテナが停止した場合に自動再起動
+    environment:
+      TZ: Asia/Tokyo # タイムゾーンを日本時間に設定
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}   # .env から読み込み
+      MYSQL_DATABASE: ${MYSQL_DATABASE}             # .env から読み込み
+      MYSQL_USER: ${MYSQL_USER}                     # .env から読み込み
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}             # .env から読み込み
+    volumes:
+      - mysql_data:/var/lib/mysql # データベースデータを永続化
+      - ./database/my.cnf:/etc/mysql/my.cnf # MySQLの設定ファイルをマウント
+    ports:
+      - "3308:3306"
+    networks:
+      - cms_network
+
+  website: # Next.jsを利用したフロントエンド
+    build:
+      context: ./website # Dockerfileが存在するディレクトリ
+    container_name: website
+    environment:
+      TZ: Asia/Tokyo # タイムゾーンを日本時間に設定
+      API_URL: http://cms_backend # CMSのAPIエンドポイント
+    volumes:
+      - ./website:/app # Next.jsのソースコードをコンテナ内にマウント
+      # - website_node_modules:/app/node_modules # node_modulesを分離
+    command: ["npm", "run", "dev"] # 開発サーバーの起動コマンド
+    networks:
+      - cms_network
+
+volumes:
+  mysql_data: # MySQLの永続化データ用ボリューム
+    driver: local
+  frontend_node_modules: # フロントエンド用のNode.jsモジュールを保存するボリューム
+    driver: local
+  website_node_modules:
+    driver: local
+  backend_vendor:
+    driver: local
+
+networks:
+  cms_network:
+    driver: bridge
