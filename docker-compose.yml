@@ -81,7 +81,7 @@ services:
       API_URL: http://cms_backend # CMSのAPIエンドポイント
     volumes:
       - ./website:/app # Next.jsのソースコードをコンテナ内にマウント
-      # - website_node_modules:/app/node_modules # node_modulesを分離
+      - website_node_modules:/app/node_modules # node_modulesを分離
     command: ["npm", "run", "dev"] # 開発サーバーの起動コマンド
     networks:
       - cms_network
