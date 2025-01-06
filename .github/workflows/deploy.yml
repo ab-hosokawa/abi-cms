@@ -28,8 +28,7 @@ jobs:
 
             sudo su -
                 
-            # 一時的なアップロード先を準備
-            cd /root/develop/
+            cd /root/abi-cms/
             git pull
 
             EOF
