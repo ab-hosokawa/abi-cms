@@ -7,10 +7,7 @@ composer install --no-dev --optimize-autoloader
 php artisan migrate --force
 chmod -R 777 storage bootstrap/cache
 
-# website
-cd website
-npm install
-npm run dev
+
 
 # メモ
 laravel11はapi.phpがないため手動で作成する必要がある
