@@ -20,3 +20,7 @@ Route::get('/test-db', function () {
         return 'データベース接続失敗: ' . $e->getMessage();
     }
 });
+
+Route::get('/test-api', function () {
+    return response()->json(['status' => 200, 'message' => 'ok']);
+});
