@@ -10,9 +10,12 @@ class FrontendController extends Controller
     public function index(Request $request)
     {
         $data = [
-            'id' => 1,
-            'title' => 'abi-cms',
-            'body' => 'abi-cmsのSTEP1-1'
+            'status_code' => 200,
+            'contents' => [
+                'id' => 1,
+                'title' => 'abi-cms',
+                'body' => 'abi-cmsのSTEP1-1'
+            ]
         ];
 
         return response()->json($data);
