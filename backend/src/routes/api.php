@@ -2,6 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\FrontendController;
+use App\Http\Controllers\Api\WebsiteController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -20,3 +22,9 @@ Route::get('/test-db', function () {
         return 'データベース接続失敗: ' . $e->getMessage();
     }
 });
+
+// Frontend
+Route::get('/fe/step1/1', [FrontendController::class, 'index']);
+
+// Website
+Route::get('/web/step1/1', [WebsiteController::class, 'index']);
