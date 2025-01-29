@@ -1,9 +1,8 @@
 <?php
 
+use app\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\FrontendController;
-use App\Http\Controllers\Api\WebsiteController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -24,7 +23,13 @@ Route::get('/test-db', function () {
 });
 
 // Frontend
-Route::get('/fe/step1/1', [FrontendController::class, 'index']);
+Route::get('/fe/step1/1', [Api\Step1_1\FrontendController::class, 'index']);
 
 // Website
-Route::get('/web/step1/1', [WebsiteController::class, 'index']);
+Route::get('/web/step1/1', [Api\Step1_1\WebsiteController::class, 'index']);
+
+// Frontend
+Route::get('/fe/step1/2', [Api\Step1_2\FrontendController::class, 'index']);
+
+// Website
+Route::get('/web/step1/2', [Api\Step1_2\WebsiteController::class, 'index']);
