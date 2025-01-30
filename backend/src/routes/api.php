@@ -37,7 +37,7 @@ Route::prefix('/fe')->group(function() {
 });
 
 /** Website **/
-Route::prefix('/web/')->group(function() {
+Route::prefix('/web')->group(function() {
     // STEP1
     Route::prefix('/step1')->group(function() {
         // 1
