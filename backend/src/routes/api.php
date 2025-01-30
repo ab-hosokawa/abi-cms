@@ -22,14 +22,28 @@ Route::get('/test-db', function () {
     }
 });
 
-// Frontend
-Route::get('/fe/step1/1', [Api\Step1_1\FrontendController::class, 'index']);
+/*************************************/
+/********** 課題のルーティング **********/
+/*************************************/
+/** Frontend **/
+Route::prefix('/fe')->group(function() {
+    // STEP1
+    Route::prefix('/step1')->group(function() {
+        // 1
+        Route::get('/1', [Api\Step1_1\FrontendController::class, 'index']);
+        // 2
+        Route::get('/2', [Api\Step1_2\FrontendController::class, 'index']);
+    });
+});
 
-// Website
-Route::get('/web/step1/1', [Api\Step1_1\WebsiteController::class, 'index']);
+/** Website **/
+Route::prefix('/web/')->group(function() {
+    // STEP1
+    Route::prefix('/step1')->group(function() {
+        // 1
+        Route::get('/1', [Api\Step1_1\WebsiteController::class, 'index']);
+        // 2
+        Route::get('/2', [Api\Step1_2\WebsiteController::class, 'index']);
+    });
 
-// Frontend
-Route::get('/fe/step1/2', [Api\Step1_2\FrontendController::class, 'index']);
-
-// Website
-Route::get('/web/step1/2', [Api\Step1_2\WebsiteController::class, 'index']);
+});
