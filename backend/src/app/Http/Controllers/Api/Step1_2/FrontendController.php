@@ -23,15 +23,23 @@ class FrontendController extends Controller
 
     public function store(Request $request)
     {
-        $posts = Article::all();
+        $model = new Article();
 
-        return response()->json([
+        $model->title = $request->title;
+        $model->body = $request->body;
+
+        $model->save();
+
+        $result = [
             'success' => true,
             'timestamp' => now()->timestamp,
             'payload' => [
-                'data' => $posts,
+                'id' => $model->id,
+                'result' => true,
             ]
-        ],200);
+        ];
+
+        return response()->json($result,200);
     }
 
     public function show(Request $request, $id)

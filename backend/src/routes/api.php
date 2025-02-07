@@ -33,6 +33,8 @@ Route::prefix('/fe')->group(function() {
         Route::get('/1', [Api\Step1_1\FrontendController::class, 'index']);
         // 2
         Route::get('/2', [Api\Step1_2\FrontendController::class, 'index']);
+        Route::post('/2/store', [Api\Step1_2\FrontendController::class, 'store']);
+        Route::get('/2/{id}', [Api\Step1_2\FrontendController::class, 'show']);
     });
 });
 
