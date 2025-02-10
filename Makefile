@@ -2,6 +2,7 @@
 
 # 初回
 init:
+	docker compose build
 
 # 起動
 run:
@@ -15,3 +16,5 @@ down:
 
 # キャッシュクリア
 clear:
+	docker exec -it cms_backend sh -c \
+	"php artisan optimize:clear"
