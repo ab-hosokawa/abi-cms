@@ -46,6 +46,7 @@ Route::prefix('/web')->group(function() {
         Route::get('/1', [Api\Step1_1\WebsiteController::class, 'index']);
         // 2
         Route::get('/2', [Api\Step1_2\WebsiteController::class, 'index']);
+        Route::get('/2/{id}', [Api\Step1_2\WebsiteController::class, 'show']);
     });
 
 });
