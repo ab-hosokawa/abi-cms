@@ -20,14 +20,6 @@ clear:
 	"php artisan optimize:clear"
 
 # シーダー
-seed_1_2:
+seed:
 	docker exec -it cms_backend sh -c \
-	"php artisan db:seed --class=Step1_2Seeder --force"
-
-seed_1_3:
-	docker exec -it cms_backend sh -c \
-	"php artisan db:seed --class=Step1_3Seeder --force"
-
-seed_1_4:
-	docker exec -it cms_backend sh -c \
-	"php artisan db:seed --class=Step1_4Seeder --force"
+	"php artisan db:seed --class=Step${step}Seeder --force"
