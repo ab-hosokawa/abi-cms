@@ -31,13 +31,10 @@ jobs:
             cd /root/abi-cms/
             git pull
 
-          # Laravelの階層に移動
             cd ./backend/src/
           
-          # backendコンテナに入る
             docker exec -it cms_backend bash
 
-          # migrateコマンド実行
             php artisan migrate --force
             
             EOF
