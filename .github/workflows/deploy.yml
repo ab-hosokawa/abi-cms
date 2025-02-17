@@ -37,4 +37,6 @@ jobs:
 
             php artisan migrate --force
             
+            exit
+            
             EOF
