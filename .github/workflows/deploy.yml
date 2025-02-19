@@ -30,6 +30,8 @@ jobs:
                 
             cd /root/abi-cms/
             git pull
+            
+            docker exec cms_frontend npm install || exit 1
 
             cd ./backend/src/
           
@@ -38,7 +40,5 @@ jobs:
             php artisan migrate --force
             
             exit
-            
-            docker exec cms_frontend npm install
             
             EOF
