@@ -41,6 +41,10 @@ jobs:
             
             cd /root/abi-cms/frontend/
             
+            docker exec -it cms_frontend bash
+            
             npm install
+            
+            exit
             
             EOF
