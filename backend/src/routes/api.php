@@ -35,6 +35,11 @@ Route::prefix('/fe')->group(function() {
         Route::get('/2', [Api\Step1_2\FrontendController::class, 'index']);
         Route::post('/2/store', [Api\Step1_2\FrontendController::class, 'store']);
         Route::get('/2/{id}', [Api\Step1_2\FrontendController::class, 'show']);
+        // 3
+        Route::get('/3', [Api\Step1_3\FrontendController::class, 'index']);
+        Route::put('/3/{id}', [Api\Step1_3\FrontendController::class, 'update']);
+        Route::delete('/3/{id}', [Api\Step1_3\FrontendController::class, 'destroy']);
+        Route::get('/3/{id}/edit', [Api\Step1_3\FrontendController::class, 'edit']);
     });
 });
 
@@ -47,6 +52,7 @@ Route::prefix('/web')->group(function() {
         // 2
         Route::get('/2', [Api\Step1_2\WebsiteController::class, 'index']);
         Route::get('/2/{id}', [Api\Step1_2\WebsiteController::class, 'show']);
+        // 3
+        Route::get('/3', [Api\Step1_3\WebsiteController::class, 'index']);
     });
-
 });
