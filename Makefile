@@ -9,6 +9,8 @@ run:
 	docker compose up -d
 	docker exec -it cms_backend sh -c \
 	"php artisan migrate"
+	docker exec -it cms_frontend sh -c \
+    "npm install"
 
 # 停止
 down:
@@ -23,3 +25,6 @@ clear:
 seed:
 	docker exec -it cms_backend sh -c \
 	"php artisan db:seed --class=Step${step}Seeder --force"
+
+bash:
+	docker exec -it $(container) sh

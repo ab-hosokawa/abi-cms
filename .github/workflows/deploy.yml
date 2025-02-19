@@ -37,6 +37,10 @@ jobs:
 
             php artisan migrate --force
             
+            cd /root/abi-cms/frontend/
+            
+            npm install
+            
             exit
             
             EOF
