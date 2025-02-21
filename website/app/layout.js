@@ -15,6 +15,6 @@ async function getData() {
 export default async function RootLayout({children}) {
     const data = await getData();
     return (
-        <Html data={data} children={children}/>
+        <Html data={data} child={children}/>
     );
 }

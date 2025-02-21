@@ -77,12 +77,14 @@ services:
       context: ./website # Dockerfileが存在するディレクトリ
     container_name: website
     environment:
+      WATCHPACK_POLLING: "true"
+      CHOKIDAR_USEPOLLING: "true"
       TZ: Asia/Tokyo # タイムゾーンを日本時間に設定
       API_URL: http://cms_backend # CMSのAPIエンドポイント
     volumes:
       - ./website:/app # Next.jsのソースコードをコンテナ内にマウント
       - website_node_modules:/app/node_modules # node_modulesを分離
-    command: ["npm", "run", "dev"] # 開発サーバーの起動コマンド
+    command: ["npm", "run", "dev", "--", "-H", "0.0.0.0"] # 開発サーバーの起動コマンド
     networks:
       - cms_network
 

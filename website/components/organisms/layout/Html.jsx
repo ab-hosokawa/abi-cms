@@ -12,7 +12,7 @@ const geistMono = Geist_Mono({
     variable: "--font-geist-mono",
     subsets: ["latin"],
 });
-export default function Html({data, children}) {
+export default function Html({data, child}) {
     return (
         <html lang="ja">
         <StoreProvider data={data}>
@@ -20,7 +20,7 @@ export default function Html({data, children}) {
                 className={`${geistSans.variable} ${geistMono.variable} antialiased`}
             >
             <Header/>
-            <main className="container mx-auto my-7">{children}</main>
+            <main className="container mx-auto my-7">{child}</main>
             <Footer/>
             </body>
         </StoreProvider>
