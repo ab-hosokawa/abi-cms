@@ -4,12 +4,7 @@ import { HashRouter, Route, Routes } from 'react-router-dom'
 import './index.css'
 import App from './App.jsx'
 import { Col, Container, Nav, Navbar, Row } from 'react-bootstrap'
-import { Step1_2 } from './pages/Step1_2.jsx'
-
-const routes = [
-  { path: '/', element: App, name: 'Top' },
-  { path: '/step1_2/', element: Step1_2, name: 'Step1-2' },
-]
+import { routes } from './routes/routes.js'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -21,11 +16,13 @@ createRoot(document.getElementById('root')).render(
         <Col xs={2} className={'bg-light vh-100'}>
           <Nav className={'flex-column p-3'}>
             {routes.map((route, key) => {
-              return (
-                <Nav.Link href={'/#' + route.path} key={key}>
-                  {route.name}
-                </Nav.Link>
-              )
+              if (route.menu) {
+                return (
+                  <Nav.Link href={'/#' + route.path} key={key}>
+                    {route.name}
+                  </Nav.Link>
+                )
+              }
             })}
           </Nav>
         </Col>
