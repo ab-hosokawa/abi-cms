@@ -10,7 +10,7 @@ export const FormGroup = ({ type = 'text', formId = '', label = '', ...rest }) =
             default:
               return (
                 <>
-                  <FormInput type={type} formId={formId} {...rest} />
+                  <FormInput type={type} {...rest} />
                 </>
               )
           }
@@ -20,10 +20,10 @@ export const FormGroup = ({ type = 'text', formId = '', label = '', ...rest }) =
   )
 }
 
-export const FormInput = ({ type, formId, ...rest }) => {
+export const FormInput = ({ type, ...rest }) => {
   return (
     <>
-      <Form.Control type={type} id={formId} {...rest} />
+      <Form.Control type={type} {...rest} />
     </>
   )
 }
