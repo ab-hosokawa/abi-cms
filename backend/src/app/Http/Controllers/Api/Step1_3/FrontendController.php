@@ -19,9 +19,30 @@ class FrontendController extends Controller
             'success' => true,
             'timestamp' => now()->timestamp,
             'payload' => [
+                'total' => $posts->total(),
                 'current' => $posts->currentPage(),
                 'pages' => $posts->lastPage(),
-                'data' => $posts,
+                'data' => $posts->items(),
+            ]
+        ],200);
+    }
+
+    public function edit(Request $request, $id)
+    {
+        $post = Article::find($id);
+
+        if (!$post) {
+            return response()->json([
+                'message' => 'Post not found',
+                'sent_at' => now()->timestamp,
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'timestamp' => now()->timestamp,
+            'payload' => [
+                'data' => $post,
             ]
         ],200);
     }
@@ -66,23 +87,4 @@ class FrontendController extends Controller
         ],200);
     }
 
-    public function edit(Request $request, $id)
-    {
-        $post = Article::find($id);
-
-        if (!$post) {
-            return response()->json([
-                'message' => 'Post not found',
-                'sent_at' => now()->timestamp,
-            ], 404);
-        }
-
-        return response()->json([
-            'success' => true,
-            'timestamp' => now()->timestamp,
-            'payload' => [
-                'data' => $post,
-            ]
-        ],200);
-    }
 }
