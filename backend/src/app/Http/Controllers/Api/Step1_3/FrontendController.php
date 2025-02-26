@@ -10,12 +10,17 @@ class FrontendController extends Controller
 {
     public function index(Request $request)
     {
-        $posts = Article::all();
+        $limit = $request->input('limit', 10);
+        $current = $request->input('current', 1);
+
+        $posts = Article::paginate($limit, ['*'], 'page', $current);
 
         return response()->json([
             'success' => true,
             'timestamp' => now()->timestamp,
             'payload' => [
+                'current' => $posts->currentPage(),
+                'pages' => $posts->lastPage(),
                 'data' => $posts,
             ]
         ],200);
@@ -32,6 +37,11 @@ class FrontendController extends Controller
             ], 404);
         }
 
+        $post->title = $request->title;
+        $post->body = $request->body;
+
+        $post->save();
+
         return response()->json([
             'success' => true,
             'timestamp' => now()->timestamp,
@@ -45,12 +55,7 @@ class FrontendController extends Controller
     {
         $post = Article::find($id);
 
-        if (!$post) {
-            return response()->json([
-                'message' => 'Post not found',
-                'sent_at' => now()->timestamp,
-            ], 404);
-        }
+        $post->delete();
 
         return response()->json([
             'success' => true,
