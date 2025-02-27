@@ -39,7 +39,7 @@ class FrontendController extends Controller
             ]
         ];
 
-        return response()->json($result,200);
+        return response()->json($result,201);
     }
 
     public function show(Request $request, $id)
