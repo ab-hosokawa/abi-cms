@@ -32,7 +32,7 @@ export const useApi = () => {
   const post = ({ endpoint, params = {}, headers = {} } = {}) => {
     const apiClient = init()
     return apiClient
-      .post(endpoint, { params: params, headers: headers, signal: controller.signal })
+      .post(endpoint, params, { headers: headers, signal: controller.signal })
       .then((res) => {
         return res
       })
@@ -44,7 +44,7 @@ export const useApi = () => {
   const put = ({ endpoint, params = {}, headers = {} } = {}) => {
     const apiClient = init()
     return apiClient
-      .put(endpoint, { params: params, headers: headers, signal: controller.signal })
+      .put(endpoint, params, { headers: headers, signal: controller.signal })
       .then((res) => {
         return res
       })
@@ -64,6 +64,16 @@ export const useApi = () => {
         return err.response
       })
   }
+
+  const abort = () => {
+    controller.abort()
+  }
+
+  return { get, post, put, remove, abort }
+}
+
+export const useApiExec = () => {
+  const api = useApi()
 
   /**
    * API実行
@@ -88,16 +98,16 @@ export const useApi = () => {
         let res = null
         switch (method.toLowerCase()) {
           case 'post':
-            res = post({ endpoint, params, headers })
+            res = api.post({ endpoint, params, headers })
             break
           case 'put':
-            res = put({ endpoint, params, headers })
+            res = api.put({ endpoint, params, headers })
             break
           case 'delete':
-            res = remove({ endpoint, params, headers })
+            res = api.remove({ endpoint, params, headers })
             break
           default:
-            res = get({ endpoint, params, headers })
+            res = api.get({ endpoint, params, headers })
         }
 
         resolve(res)
@@ -128,7 +138,7 @@ export const useApi = () => {
   }
 
   const abort = () => {
-    controller.abort()
+    api.abort()
   }
 
   return { onExec, abort }

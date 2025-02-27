@@ -20,10 +20,16 @@ export const FormGroup = ({ type = 'text', formId = '', label = '', ...rest }) =
   )
 }
 
-export const FormInput = ({ type, ...rest }) => {
+export const FormInput = ({ type, onChange = () => {}, ...rest }) => {
   return (
     <>
-      <Form.Control type={type} {...rest} />
+      <Form.Control
+        type={type}
+        {...rest}
+        onChange={(e) => {
+          onChange(e.target.value, e)
+        }}
+      />
     </>
   )
 }
