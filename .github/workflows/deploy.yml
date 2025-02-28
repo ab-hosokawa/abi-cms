@@ -31,14 +31,10 @@ jobs:
             cd /root/abi-cms/
             git pull
             
+            # フロントエンドの依存関係インストール
             docker exec cms_frontend npm install || exit 1
-
-            cd ./backend/src/
-          
-            docker exec -it cms_backend bash
-
-            php artisan migrate --force
             
-            exit
+            # バックエンドのマイグレーション実行（-itフラグを削除）
+            docker exec cms_backend php artisan migrate --force
             
             EOF
