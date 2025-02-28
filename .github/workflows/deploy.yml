@@ -37,20 +37,31 @@ jobs:
 
           podman exec cms_backend php artisan migrate --force
 
-          # コンテナの状態確認
-          echo "Checking container status..."
-          podman ps -a | grep website
-
-          # websiteコンテナが停止している場合は起動
+          # コンテナの起動確認と再試行のロジックを追加
           if ! podman ps | grep -q website; then
-            echo "Starting website container..."
-            podman start website
-            sleep 10  # コンテナの起動を待機
+          echo "Starting website container..."
+          podman start website
+
+          # コンテナの起動を待機
+          echo "Waiting for container to be ready..."
+          for i in {1..30}; do
+          if podman ps | grep -q website; then
+          echo "Container is running"
+          break
+          fi
+          echo "Waiting... ($i/30)"
+          sleep 2
+          done
           fi
 
-          # Next.jsアプリケーションの再ビルドと再起動
-          podman exec website bash -c "cd /app && npm install && npm run build && pm2 restart all"
+          # コンテナの状態を再確認
+          if ! podman ps | grep -q website; then
+          echo "Failed to start container"
+          exit 1
+          fi
 
+          # コンテナが確実に起動している状態でコマンドを実行
+          podman exec website bash -c "cd /app && npm install && npm run build && pm2 restart all"
           exit
 
           EOF
