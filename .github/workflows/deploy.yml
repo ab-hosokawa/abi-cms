@@ -1,58 +1,44 @@
 name: Deploy to Server
 
 on:
-  push:
-    branches: ["main"]
+    push:
+        branches: [ "main"]
 
 jobs:
-  deploy:
-    runs-on: ubuntu-latest
+    deploy:
+        runs-on: ubuntu-latest
+    
+        steps:
+        - name: Checkout Code
+          uses: actions/checkout@v3
+    
+        - name: Set up SSH
+          uses: webfactory/ssh-agent@v0.5.3
+          with:
+            ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
+        - name: Add known hosts
+          run: |
+            mkdir -p ~/.ssh
+            echo "${{ secrets.KNOWN_HOSTS }}" > ~/.ssh/known_hosts
 
-      - name: Set up SSH
-        uses: webfactory/ssh-agent@v0.5.3
-        with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+        - name: Deploy to Server
+          run: |
+            ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'EOF'
 
-      - name: Add known hosts
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+            sudo su -
+                
+            cd /root/abi-cms/
+            git pull
+            
+            docker exec cms_frontend npm install || exit 1
 
-      - name: Deploy to Server
-        run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'EOF'
+            cd ./backend/src/
+          
+            docker exec -it cms_backend bash
 
-          sudo su -
-
-          cd /root/abi-cms/
-          git pull
-
-          # フロントエンドの依存関係インストール
-          docker exec cms_frontend npm install || exit 1
-
-          # バックエンドのマイグレーション実行
-          docker exec cms_backend php artisan migrate --force
-
-          # コンテナの再起動
-          docker restart cms_frontend
-          docker restart cms_backend
-          docker restart website
-
-          # コンテナのステータス確認
-          docker ps -a
-
-          # エラーログの確認
-          echo "Frontend Logs:"
-          docker logs --tail 50 cms_frontend
-
-          echo "Backend Logs:"
-          docker logs --tail 50 cms_backend
-
-          echo "Website Logs:"
-          docker logs --tail 50 website
-
-          EOF
+            php artisan migrate --force
+            
+            exit
+            
+            EOF
