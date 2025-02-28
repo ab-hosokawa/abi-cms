@@ -77,6 +77,8 @@ services:
       context: ./website # Dockerfileが存在するディレクトリ
     container_name: website
     environment:
+      WATCHPACK_POLLING: "true"
+      CHOKIDAR_USEPOLLING: "true"
       TZ: Asia/Tokyo # タイムゾーンを日本時間に設定
       API_URL: http://cms_backend # CMSのAPIエンドポイント
     volumes:
