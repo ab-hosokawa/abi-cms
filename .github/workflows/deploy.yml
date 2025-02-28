@@ -1,44 +1,51 @@
 name: Deploy to Server
 
 on:
-    push:
-        branches: [ "main"]
+  push:
+    branches: ["main"]
 
 jobs:
-    deploy:
-        runs-on: ubuntu-latest
-    
-        steps:
-        - name: Checkout Code
-          uses: actions/checkout@v3
-    
-        - name: Set up SSH
-          uses: webfactory/ssh-agent@v0.5.3
-          with:
-            ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+  deploy:
+    runs-on: ubuntu-latest
 
-        - name: Add known hosts
-          run: |
-            mkdir -p ~/.ssh
-            echo "${{ secrets.KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
 
-        - name: Deploy to Server
-          run: |
-            ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'EOF'
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-            sudo su -
-                
-            cd /root/abi-cms/
-            git pull
-            
-            docker exec cms_frontend npm install || exit 1
+      - name: Add known hosts
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.KNOWN_HOSTS }}" > ~/.ssh/known_hosts
 
-            cd ./backend/src/
-          
-            docker exec -it cms_backend bash
+      - name: Deploy to Server
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'EOF'
+          cd /root/abi-cms/
+          git pull
 
-            php artisan migrate --force
-            
-            exit
-            
-            EOF
+          # フロントエンドの依存関係インストール
+          docker exec cms_frontend npm install || exit 1
+
+          # バックエンドのマイグレーション実行
+          docker exec cms_backend php artisan migrate --force
+
+          # Nginxのエラーログを確認
+          echo "=== Nginx error logs ==="
+          docker exec website bash -c '[ -f /var/log/nginx/error.log ] && cat /var/log/nginx/error.log || echo "Log file not found"'
+
+          # PHP-FPMのエラーログを確認
+          echo "=== PHP-FPM error logs ==="
+          docker exec website bash -c '[ -f /var/log/php-fpm/error.log ] && cat /var/log/php-fpm/error.log || echo "Log file not found"'
+
+          # コンテナの状態確認
+          echo "=== Container Status ==="
+          docker ps | grep website
+
+          # もし必要であれば、コンテナを再起動
+          # docker compose restart website
+          EOF
