@@ -4,6 +4,7 @@ namespace app\Http\Controllers\Api\Step1_3;
 
 use App\Http\Controllers\Controller;
 use App\Models\Article;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 
 class FrontendController extends Controller
@@ -49,32 +50,41 @@ class FrontendController extends Controller
 
     public function update(Request $request, $id)
     {
-        $post = Article::find($id);
+        try {
+            $validatedData = $request->validate([
+                'title' => 'required|string',
+                'body' => 'required|string',
+            ]);
 
-        if (!$post) {
+            $post = Article::findOrFail($id);
+
+            $post->update($validatedData);
+
             return response()->json([
-                'message' => 'Post not found',
-                'sent_at' => now()->timestamp,
-            ], 404);
+                'success' => true,
+                'timestamp' => now()->timestamp,
+                'payload' => [
+                    'data' => $post,
+                ]
+            ],200);
+
+        } catch(ModelNotFoundException $e) {
+            return response()->json([
+                'message' => 'Model not found'
+            ],404);
+
+        } catch(\Exception $e) {
+            return response()->json([
+                'message' => 'An error occurred',
+                'e' => $e->getMessage()
+            ],500);
+
         }
-
-        $post->title = $request->title;
-        $post->body = $request->body;
-
-        $post->save();
-
-        return response()->json([
-            'success' => true,
-            'timestamp' => now()->timestamp,
-            'payload' => [
-                'data' => $post,
-            ]
-        ],200);
     }
 
     public function destroy(Request $request, $id)
     {
-        $post = Article::find($id);
+        $post = Article::findOrFail($id);
 
         $post->delete();
 
@@ -82,7 +92,8 @@ class FrontendController extends Controller
             'success' => true,
             'timestamp' => now()->timestamp,
             'payload' => [
-                'data' => $post,
+                'id' => $post->id,
+                'result' => true,
             ]
         ],200);
     }
