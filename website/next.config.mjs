@@ -41,16 +41,6 @@ const nextConfig = {
             aggregateTimeout: 300,
             ignored: /node_modules/
         };
-        /**
-         * プロダクション環境のみ、ソース圧縮と余分なCSSを削除する
-         */
-        if (isProd) {
-            config.plugins.push(
-                new CompressionPlugin({
-                    algorithm: 'brotliCompress',
-                })
-            );
-        }
         return config;
     },
 };
