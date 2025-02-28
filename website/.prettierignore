@@ -1,0 +1,17 @@
+*.md
+*.scss
+*.php
+*.html
+*.toml
+*.lock
+*.json
+*.yml
+*.yaml
+*.xml
+*.ini
+*.conf
+*.cfg
+*.config
+*.properties
+*.prop
+*.prefs
