@@ -31,14 +31,14 @@ jobs:
           cd /root/abi-cms/
           git pull
 
-          docker exec cms_frontend npm install || exit 1
+          podman exec cms_frontend npm install || exit 1
 
           cd ./backend/src/
 
-          docker exec cms_backend php artisan migrate --force
+          podman exec cms_backend php artisan migrate --force
 
-          # websiteコンテナの再起動（コンテナの外で実行）
-          docker restart website
+          # Next.jsアプリケーションの再ビルドと再起動
+          podman exec website bash -c "cd /app && npm install && npm run build && pm2 restart all"
 
           exit
 
