@@ -46,72 +46,67 @@ jobs:
           podman stop website || true
           podman rm website || true
 
-          # コンテナの再作成
+          # コンテナの再作成（エントリーポイントとコマンドを明示的に指定）
           echo "Creating new container with adjusted memory limits..."
           podman run -d \
             --name website \
             --memory="4g" \
             --memory-swap="6g" \
-            localhost/abi-cms_website:latest
+            --entrypoint "/bin/sh" \
+            localhost/abi-cms_website:latest \
+            -c "cd /app && npm install && npm run dev"
 
           # コンテナの状態確認
           echo "Verifying container status..."
           podman ps -a | grep website
 
-          # コンテナログの確認
+          # コンテナログの確認とエラー検出
           echo "Checking container logs..."
-          podman logs website
+          sleep 5  # ログ出力を待機
 
-          # コンテナの起動を待機
-          echo "Waiting for container to be ready..."
-          CONTAINER_READY=false
-          for i in {1..30}; do
-            if podman ps --format "{{.Names}}" | grep -q "^website$"; then
-              CONTAINER_STATUS=$(podman inspect website --format '{{.State.Status}}')
-              if [ "$CONTAINER_STATUS" = "running" ]; then
-                echo "Container is running successfully"
-                CONTAINER_READY=true
-                break
-              fi
-            fi
-            echo "Waiting... ($i/30) - Current status: $CONTAINER_STATUS"
-            sleep 2
-          done
+          if ! podman logs website; then
+            echo "Failed to get container logs"
+            exit 1
+          fi
 
-          if [ "$CONTAINER_READY" = false ]; then
-            echo "Container failed to start properly. Checking logs:"
+          # コンテナの実行状態を確認
+          CONTAINER_STATUS=$(podman inspect website --format '{{.State.Status}}')
+          echo "Container status: $CONTAINER_STATUS"
+
+          if [ "$CONTAINER_STATUS" != "running" ]; then
+            echo "Container failed to start properly"
             podman logs website
             exit 1
           fi
 
-          # コンテナが実際に応答できることを確認
-          echo "Verifying container responsiveness..."
-          if ! podman exec website bash -c 'ps aux | grep node' > /dev/null 2>&1; then
-            echo "Container is not responding to exec commands"
+          # コンテナ内のプロセス確認
+          echo "Checking container processes..."
+          if ! podman top website; then
+            echo "Failed to check container processes"
             podman logs website
             exit 1
           fi
 
           echo "Starting build process..."
 
-          # 段階的なビルドプロセスの実行
+          # NPMプロセスの実行確認
           echo "Installing dependencies..."
-          if ! podman exec website bash -c 'cd /app && NODE_OPTIONS="--max_old_space_size=3072" npm install'; then
-            echo "Failed to install dependencies. Checking logs:"
+          if ! podman exec website /bin/sh -c 'cd /app && NODE_OPTIONS="--max_old_space_size=3072" npm install'; then
+            echo "Failed to install dependencies:"
             podman logs website
             exit 1
           fi
 
           echo "Building application..."
-          if ! podman exec website bash -c 'cd /app && NODE_OPTIONS="--max_old_space_size=3072" npm run build'; then
-            echo "Failed to build application. Checking logs:"
+          if ! podman exec website /bin/sh -c 'cd /app && NODE_OPTIONS="--max_old_space_size=3072" npm run build'; then
+            echo "Failed to build application:"
             podman logs website
             exit 1
           fi
 
           echo "Restarting PM2..."
-          if ! podman exec website bash -c 'cd /app && pm2 restart all'; then
-            echo "Failed to restart PM2. Checking logs:"
+          if ! podman exec website /bin/sh -c 'cd /app && pm2 restart all'; then
+            echo "Failed to restart PM2:"
             podman logs website
             exit 1
           fi
