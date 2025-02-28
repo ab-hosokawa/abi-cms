@@ -37,31 +37,72 @@ jobs:
 
           podman exec cms_backend php artisan migrate --force
 
-          # コンテナの起動確認と再試行のロジックを追加
+          # コンテナの状態確認
+          echo "Checking container status and memory limits..."
+          podman ps -a | grep website
+          podman inspect website | grep -i memory
+
+          # websiteコンテナの再作成（必要な場合）
           if ! podman ps | grep -q website; then
-          echo "Starting website container..."
-          podman start website
+            echo "Recreating website container with adjusted memory limits..."
+            podman stop website || true
+            podman rm website || true
+
+            # コンテナの再作成（メモリ制限付き）
+            podman run -d \
+              --name website \
+              --memory="4g" \
+              --memory-swap="6g" \
+              localhost/abi-cms_website:latest
+          else
+            echo "Starting existing website container..."
+            podman start website
+          fi
 
           # コンテナの起動を待機
           echo "Waiting for container to be ready..."
           for i in {1..30}; do
-          if podman ps | grep -q website; then
-          echo "Container is running"
-          break
-          fi
-          echo "Waiting... ($i/30)"
-          sleep 2
+            if podman ps | grep -q website; then
+              echo "Container is running"
+              break
+            fi
+            echo "Waiting... ($i/30)"
+            sleep 2
           done
-          fi
 
           # コンテナの状態を再確認
           if ! podman ps | grep -q website; then
-          echo "Failed to start container"
-          exit 1
+            echo "Failed to start container"
+            exit 1
           fi
 
-          # コンテナが確実に起動している状態でコマンドを実行
-          podman exec website bash -c "cd /app && npm install && npm run build && pm2 restart all"
+          # 段階的なビルドプロセスの実行
+          echo "Installing dependencies..."
+          podman exec website bash -c 'cd /app && NODE_OPTIONS="--max_old_space_size=3072" npm install'
+
+          if [ $? -ne 0 ]; then
+            echo "Failed to install dependencies"
+            exit 1
+          fi
+
+          echo "Building application..."
+          podman exec website bash -c 'cd /app && NODE_OPTIONS="--max_old_space_size=3072" npm run build'
+
+          if [ $? -ne 0 ]; then
+            echo "Failed to build application"
+            exit 1
+          fi
+
+          echo "Restarting PM2..."
+          podman exec website bash -c 'cd /app && pm2 restart all'
+
+          if [ $? -ne 0 ]; then
+            echo "Failed to restart PM2"
+            exit 1
+          fi
+
+          echo "Deployment completed successfully"
+
           exit
 
           EOF
