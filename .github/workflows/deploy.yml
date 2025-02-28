@@ -32,7 +32,6 @@ jobs:
             git pull
             
             docker exec cms_frontend npm install || exit 1
-            docker exec website npm install || exit 1
 
             cd ./backend/src/
           
