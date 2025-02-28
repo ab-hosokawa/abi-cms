@@ -14,13 +14,15 @@ export const useGetFetch = ({
   onSuccess = null,
   onError = null,
   onAfter = null,
+  current = null,
+  limit = null,
 } = {}) => {
   let init = false
   const { onExec, abort } = useApiExec()
 
   useEffect(() => {
     if (!init) {
-      onExec({ endpoint, method, params, headers, status, onBefore, onSuccess, onError, onAfter })
+      onExec({ endpoint, method, params: { current: current, limit: limit, ...params }, headers, status, onBefore, onSuccess, onError, onAfter })
     }
 
     return () => {
@@ -29,5 +31,5 @@ export const useGetFetch = ({
       }
       init = true
     }
-  }, [])
+  }, [current])
 }
