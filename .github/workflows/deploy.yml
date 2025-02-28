@@ -39,9 +39,6 @@ jobs:
 
             php artisan migrate --force
             
-            # websiteコンテナの再起動を追加
-            docker restart website
-            
             exit
             
             EOF
