@@ -1,72 +1,44 @@
 name: Deploy to Server
 
 on:
-  push:
-    branches: ["main"]
+    push:
+        branches: [ "main"]
 
 jobs:
-  deploy:
-    runs-on: ubuntu-latest
+    deploy:
+        runs-on: ubuntu-latest
+    
+        steps:
+        - name: Checkout Code
+          uses: actions/checkout@v3
+    
+        - name: Set up SSH
+          uses: webfactory/ssh-agent@v0.5.3
+          with:
+            ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
+        - name: Add known hosts
+          run: |
+            mkdir -p ~/.ssh
+            echo "${{ secrets.KNOWN_HOSTS }}" > ~/.ssh/known_hosts
 
-      - name: Set up SSH
-        uses: webfactory/ssh-agent@v0.5.3
-        with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+        - name: Deploy to Server
+          run: |
+            ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'EOF'
 
-      - name: Add known hosts
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+            sudo su -
+                
+            cd /root/abi-cms/
+            git pull
+            
+            docker exec cms_frontend npm install || exit 1
 
-      - name: Deploy to Server
-        run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'EOF'
-          # プロジェクトディレクトリの確認
-          PROJECT_DIR="/path/to/your/project"  # 実際のプロジェクトパスに変更してください
+            cd ./backend/src/
+          
+            docker exec -it cms_backend bash
 
-          # ディレクトリの存在確認と権限確認
-          if [ ! -d "$PROJECT_DIR" ]; then
-              echo "Error: Project directory does not exist"
-              exit 1
-          fi
-
-          cd "$PROJECT_DIR" || exit 1
-
-          # Gitリポジトリの確認
-          if [ ! -d .git ]; then
-              echo "Error: Not a git repository"
-              exit 1
-          fi
-
-          # コンテナの存在確認
-          if ! docker ps -a | grep -q cms_frontend; then
-              echo "Error: cms_frontend container not found"
-              exit 1
-          fi
-
-          # 実際のデプロイ処理
-          git pull
-
-          # フロントエンドの依存関係インストール
-          docker exec cms_frontend npm install || exit 1
-
-          # バックエンドのマイグレーション実行
-          if docker ps -a | grep -q cms_backend; then
-              docker exec cms_backend php artisan migrate --force
-          else
-              echo "Warning: cms_backend container not found"
-          fi
-
-          # websiteコンテナのログ確認（存在する場合）
-          if docker ps -a | grep -q website; then
-              echo "=== Website container logs ==="
-              docker exec website bash -c '[ -f /var/log/nginx/error.log ] && cat /var/log/nginx/error.log || echo "Nginx log not found"'
-              docker exec website bash -c '[ -f /var/log/php-fpm/error.log ] && cat /var/log/php-fpm/error.log || echo "PHP-FPM log not found"'
-          else
-              echo "Warning: website container not found"
-          fi
-          EOF
+            php artisan migrate --force
+            
+            exit
+            
+            EOF
