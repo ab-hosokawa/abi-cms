@@ -43,3 +43,6 @@ jobs:
             
             # コンテナの状態確認
             docker ps
+            
+            exit
+            EOF
