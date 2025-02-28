@@ -30,22 +30,28 @@ class FrontendController extends Controller
 
     public function edit(Request $request, $id)
     {
-        $post = Article::find($id);
+        try {
+            $post = Article::findOrFail($id);
 
-        if (!$post) {
             return response()->json([
-                'message' => 'Post not found',
-                'sent_at' => now()->timestamp,
-            ], 404);
-        }
+                'success' => true,
+                'timestamp' => now()->timestamp,
+                'payload' => [
+                    'data' => $post,
+                ]
+            ],200);
 
-        return response()->json([
-            'success' => true,
-            'timestamp' => now()->timestamp,
-            'payload' => [
-                'data' => $post,
-            ]
-        ],200);
+        } catch(ModelNotFoundException $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+            ],404);
+
+        } catch(\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+            ],500);
+
+        }
     }
 
     public function update(Request $request, $id)
@@ -70,13 +76,12 @@ class FrontendController extends Controller
 
         } catch(ModelNotFoundException $e) {
             return response()->json([
-                'message' => 'Model not found'
+                'message' => $e->getMessage(),
             ],404);
 
         } catch(\Exception $e) {
             return response()->json([
-                'message' => 'An error occurred',
-                'e' => $e->getMessage()
+                'message' => $e->getMessage(),
             ],500);
 
         }
@@ -84,18 +89,30 @@ class FrontendController extends Controller
 
     public function destroy(Request $request, $id)
     {
-        $post = Article::findOrFail($id);
+        try {
+            $post = Article::findOrFail($id);
 
-        $post->delete();
+            $post->delete();
 
-        return response()->json([
-            'success' => true,
-            'timestamp' => now()->timestamp,
-            'payload' => [
-                'id' => $post->id,
-                'result' => true,
-            ]
-        ],200);
+            return response()->json([
+                'success' => true,
+                'timestamp' => now()->timestamp,
+                'payload' => [
+                    'id' => $post->id,
+                    'result' => true,
+                ]
+            ],200);
+        } catch(ModelNotFoundException $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+            ],404);
+
+        } catch(\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+            ],500);
+
+        }
     }
 
 }
