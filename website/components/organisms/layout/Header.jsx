@@ -1,13 +1,15 @@
 'use client';
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTheme } from '@/lib/context/ThemeContext';
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
+  const { isDarkMode, toggleDarkMode } = useTheme();
   const router = useRouter();
 
   return (
-    <header className="bg-gray-700 text-white shadow-md">
+    <header className={isDarkMode ? 'bg-gray-700 text-white shadow-md' : 'bg-gray-200 shadow-md'}>
       <div className="container mx-auto flex items-center justify-between py-4">
         {/* ロゴ */}
         <div className="text-2xl font-bold">
@@ -51,7 +53,7 @@ export default function Header() {
                 }}
                 className="hover:underline focus:outline-none focus:ring-2 focus:ring-yellow-400"
               >
-                MVP記事一覧
+                記事一覧
               </a>
             </li>
           </ul>
