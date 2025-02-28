@@ -38,66 +38,81 @@ jobs:
           podman exec cms_backend php artisan migrate --force
 
           # コンテナの状態確認
-          echo "Checking container status and memory limits..."
+          echo "Checking container status..."
           podman ps -a | grep website
-          podman inspect website | grep -i memory
 
-          # websiteコンテナの再作成（必要な場合）
-          if ! podman ps | grep -q website; then
-            echo "Recreating website container with adjusted memory limits..."
-            podman stop website || true
-            podman rm website || true
+          # 既存のコンテナを停止・削除
+          echo "Cleaning up existing container..."
+          podman stop website || true
+          podman rm website || true
 
-            # コンテナの再作成（メモリ制限付き）
-            podman run -d \
-              --name website \
-              --memory="4g" \
-              --memory-swap="6g" \
-              localhost/abi-cms_website:latest
-          else
-            echo "Starting existing website container..."
-            podman start website
-          fi
+          # コンテナの再作成
+          echo "Creating new container with adjusted memory limits..."
+          podman run -d \
+            --name website \
+            --memory="4g" \
+            --memory-swap="6g" \
+            localhost/abi-cms_website:latest
+
+          # コンテナの状態確認
+          echo "Verifying container status..."
+          podman ps -a | grep website
+
+          # コンテナログの確認
+          echo "Checking container logs..."
+          podman logs website
 
           # コンテナの起動を待機
           echo "Waiting for container to be ready..."
+          CONTAINER_READY=false
           for i in {1..30}; do
-            if podman ps | grep -q website; then
-              echo "Container is running"
-              break
+            if podman ps --format "{{.Names}}" | grep -q "^website$"; then
+              CONTAINER_STATUS=$(podman inspect website --format '{{.State.Status}}')
+              if [ "$CONTAINER_STATUS" = "running" ]; then
+                echo "Container is running successfully"
+                CONTAINER_READY=true
+                break
+              fi
             fi
-            echo "Waiting... ($i/30)"
+            echo "Waiting... ($i/30) - Current status: $CONTAINER_STATUS"
             sleep 2
           done
 
-          # コンテナの状態を再確認
-          if ! podman ps | grep -q website; then
-            echo "Failed to start container"
+          if [ "$CONTAINER_READY" = false ]; then
+            echo "Container failed to start properly. Checking logs:"
+            podman logs website
             exit 1
           fi
 
+          # コンテナが実際に応答できることを確認
+          echo "Verifying container responsiveness..."
+          if ! podman exec website bash -c 'ps aux | grep node' > /dev/null 2>&1; then
+            echo "Container is not responding to exec commands"
+            podman logs website
+            exit 1
+          fi
+
+          echo "Starting build process..."
+
           # 段階的なビルドプロセスの実行
           echo "Installing dependencies..."
-          podman exec website bash -c 'cd /app && NODE_OPTIONS="--max_old_space_size=3072" npm install'
-
-          if [ $? -ne 0 ]; then
-            echo "Failed to install dependencies"
+          if ! podman exec website bash -c 'cd /app && NODE_OPTIONS="--max_old_space_size=3072" npm install'; then
+            echo "Failed to install dependencies. Checking logs:"
+            podman logs website
             exit 1
           fi
 
           echo "Building application..."
-          podman exec website bash -c 'cd /app && NODE_OPTIONS="--max_old_space_size=3072" npm run build'
-
-          if [ $? -ne 0 ]; then
-            echo "Failed to build application"
+          if ! podman exec website bash -c 'cd /app && NODE_OPTIONS="--max_old_space_size=3072" npm run build'; then
+            echo "Failed to build application. Checking logs:"
+            podman logs website
             exit 1
           fi
 
           echo "Restarting PM2..."
-          podman exec website bash -c 'cd /app && pm2 restart all'
-
-          if [ $? -ne 0 ]; then
-            echo "Failed to restart PM2"
+          if ! podman exec website bash -c 'cd /app && pm2 restart all'; then
+            echo "Failed to restart PM2. Checking logs:"
+            podman logs website
             exit 1
           fi
 
