@@ -1,23 +1,44 @@
-- name: Deploy to Server
-  run: |
-    ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'EOF'
+name: Deploy to Server
 
-    sudo su -
-    cd /root/abi-cms/
-    git pull
+on:
+    push:
+        branches: [ "main"]
 
-    # フロントエンドの依存関係インストール
-    docker exec cms_frontend npm install || exit 1
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+    
+        steps:
+        - name: Checkout Code
+          uses: actions/checkout@v3
+    
+        - name: Set up SSH
+          uses: webfactory/ssh-agent@v0.5.3
+          with:
+            ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-    # バックエンドのマイグレーション実行
-    docker exec cms_backend php artisan migrate --force || exit 1
+        - name: Add known hosts
+          run: |
+            mkdir -p ~/.ssh
+            echo "${{ secrets.KNOWN_HOSTS }}" > ~/.ssh/known_hosts
 
-    # コンテナを再起動
-    docker restart cms_backend
-    docker restart cms_frontend
+        - name: Deploy to Server
+          run: |
+            ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'EOF'
 
-    # コンテナの状態確認
-    docker ps
+            sudo su -
+                
+            cd /root/abi-cms/
+            git pull
+            
+            docker exec cms_frontend npm install || exit 1
 
-    exit
-    EOF
+            cd ./backend/src/
+          
+            docker exec -it cms_backend bash
+
+            php artisan migrate --force
+            
+            exit
+            
+            EOF
