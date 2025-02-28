@@ -25,27 +25,48 @@ jobs:
       - name: Deploy to Server
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} << 'EOF'
-          cd /root/abi-cms/
+          # プロジェクトディレクトリの確認
+          PROJECT_DIR="/path/to/your/project"  # 実際のプロジェクトパスに変更してください
+
+          # ディレクトリの存在確認と権限確認
+          if [ ! -d "$PROJECT_DIR" ]; then
+              echo "Error: Project directory does not exist"
+              exit 1
+          fi
+
+          cd "$PROJECT_DIR" || exit 1
+
+          # Gitリポジトリの確認
+          if [ ! -d .git ]; then
+              echo "Error: Not a git repository"
+              exit 1
+          fi
+
+          # コンテナの存在確認
+          if ! docker ps -a | grep -q cms_frontend; then
+              echo "Error: cms_frontend container not found"
+              exit 1
+          fi
+
+          # 実際のデプロイ処理
           git pull
 
           # フロントエンドの依存関係インストール
           docker exec cms_frontend npm install || exit 1
 
           # バックエンドのマイグレーション実行
-          docker exec cms_backend php artisan migrate --force
+          if docker ps -a | grep -q cms_backend; then
+              docker exec cms_backend php artisan migrate --force
+          else
+              echo "Warning: cms_backend container not found"
+          fi
 
-          # Nginxのエラーログを確認
-          echo "=== Nginx error logs ==="
-          docker exec website bash -c '[ -f /var/log/nginx/error.log ] && cat /var/log/nginx/error.log || echo "Log file not found"'
-
-          # PHP-FPMのエラーログを確認
-          echo "=== PHP-FPM error logs ==="
-          docker exec website bash -c '[ -f /var/log/php-fpm/error.log ] && cat /var/log/php-fpm/error.log || echo "Log file not found"'
-
-          # コンテナの状態確認
-          echo "=== Container Status ==="
-          docker ps | grep website
-
-          # もし必要であれば、コンテナを再起動
-          # docker compose restart website
+          # websiteコンテナのログ確認（存在する場合）
+          if docker ps -a | grep -q website; then
+              echo "=== Website container logs ==="
+              docker exec website bash -c '[ -f /var/log/nginx/error.log ] && cat /var/log/nginx/error.log || echo "Nginx log not found"'
+              docker exec website bash -c '[ -f /var/log/php-fpm/error.log ] && cat /var/log/php-fpm/error.log || echo "PHP-FPM log not found"'
+          else
+              echo "Warning: website container not found"
+          fi
           EOF
