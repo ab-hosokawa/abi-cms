@@ -1,12 +1,10 @@
-// next.config.mjs
-
-const CompressionPlugin = require('compression-webpack-plugin');  // CommonJS形式
-
+import CompressionPlugin from 'compression-webpack-plugin'; // 圧縮用プラグイン
 /** @type {import('next').NextConfig} */
 const isProd = process.env.NODE_ENV === 'production';
 const nextConfig = {
     reactStrictMode: !!isProd,
     trailingSlash: true,
+    // 静的ファイルの配信設定
     compress: true,
     poweredByHeader: false,
     compiler: {
@@ -14,6 +12,9 @@ const nextConfig = {
         styledComponents: true,
     },
     webpack(config, { isServer }) {
+        // if (!isServer) {
+        //     config.plugins.push(localesPlugin.webpack({ locales: [] }));
+        // }
         config.module.rules.push({
             test: /\.svg$/,
             use: ({ resource }) => ({
@@ -38,10 +39,10 @@ const nextConfig = {
         config.watchOptions = {
             poll: 1000,
             aggregateTimeout: 300,
-            ignored: /node_modules/,
+            ignored: /node_modules/
         };
         return config;
     },
 };
 
-module.exports = nextConfig;
+export default nextConfig;
