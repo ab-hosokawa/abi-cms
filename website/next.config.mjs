@@ -1,4 +1,5 @@
 import CompressionPlugin from 'compression-webpack-plugin'; // 圧縮用プラグイン
+
 /** @type {import('next').NextConfig} */
 const isProd = process.env.NODE_ENV === 'production';
 const nextConfig = {
@@ -12,9 +13,16 @@ const nextConfig = {
         styledComponents: true,
     },
     webpack(config, { isServer }) {
-        // if (!isServer) {
-        //     config.plugins.push(localesPlugin.webpack({ locales: [] }));
-        // }
+        if (isProd) {
+            config.plugins.push(
+                new CompressionPlugin({
+                    test: /\.js$|\.css$|\.html$/, // 圧縮対象のファイル
+                    threshold: 8192, // 8KB 以上のファイルを圧縮
+                    minRatio: 0.8, // 圧縮率が0.8未満のファイルを圧縮
+                })
+            );
+        }
+
         config.module.rules.push({
             test: /\.svg$/,
             use: ({ resource }) => ({
@@ -36,11 +44,13 @@ const nextConfig = {
                 },
             }),
         });
+
         config.watchOptions = {
             poll: 1000,
             aggregateTimeout: 300,
-            ignored: /node_modules/
+            ignored: /node_modules/,
         };
+
         return config;
     },
 };
