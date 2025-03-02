@@ -1,4 +1,4 @@
-// import CompressionPlugin from 'compression-webpack-plugin'; // 圧縮用プラグイン 
+// import CompressionPlugin from 'compression-webpack-plugin'; // 圧縮用プラグイン
 /** @type {import('next').NextConfig} */
 const isProd = process.env.NODE_ENV === 'production';
 const nextConfig = {
