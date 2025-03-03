@@ -9,6 +9,10 @@ use Illuminate\Http\Request;
 
 class FrontendController extends Controller
 {
+    /** 一覧
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function index(Request $request)
     {
         $limit = $request->input('limit', 10);
@@ -28,6 +32,11 @@ class FrontendController extends Controller
         ],200);
     }
 
+    /** 編集
+     * @param Request $request
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function edit(Request $request, $id)
     {
         try {
@@ -54,6 +63,11 @@ class FrontendController extends Controller
         }
     }
 
+    /** 更新
+     * @param Request $request
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function update(Request $request, $id)
     {
         try {
@@ -72,7 +86,7 @@ class FrontendController extends Controller
                 'payload' => [
                     'data' => $post,
                 ]
-            ],200);
+            ], 204);
 
         } catch(ModelNotFoundException $e) {
             return response()->json([
@@ -87,6 +101,11 @@ class FrontendController extends Controller
         }
     }
 
+    /** 削除
+     * @param Request $request
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function destroy(Request $request, $id)
     {
         try {
@@ -101,7 +120,7 @@ class FrontendController extends Controller
                     'id' => $post->id,
                     'result' => true,
                 ]
-            ],200);
+            ], 204);
         } catch(ModelNotFoundException $e) {
             return response()->json([
                 'message' => $e->getMessage(),
