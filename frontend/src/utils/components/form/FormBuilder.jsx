@@ -2,7 +2,7 @@ import React, { useEffect, useImperativeHandle, useRef } from 'react'
 import { Form } from 'react-bootstrap'
 import { FormGroup } from './Forms.jsx'
 
-export const FormBuilder = React.forwardRef(({ formSettings = [], onSave = () => {} }, ref) => {
+export const FormBuilder = React.forwardRef(({ formSettings = [], onSave = () => {}, defaultValue = {} }, ref) => {
   const inputRef = useRef({})
   useImperativeHandle(
     ref,
@@ -16,9 +16,9 @@ export const FormBuilder = React.forwardRef(({ formSettings = [], onSave = () =>
 
   useEffect(() => {
     formSettings.map((setting) => {
-      inputRef.current[setting.name] = null
+      inputRef.current[setting.name] = defaultValue?.[setting.name]
     })
-  }, [])
+  }, [defaultValue])
 
   return (
     <>
@@ -30,6 +30,7 @@ export const FormBuilder = React.forwardRef(({ formSettings = [], onSave = () =>
                 onChange={(val, e) => {
                   inputRef.current[setting.name] = val
                 }}
+                defaultValue={defaultValue?.[setting.name]}
                 {...setting}
               />
             )

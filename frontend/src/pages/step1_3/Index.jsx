@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useNavigation } from '../../utils/hooks/useNavigation.js'
-import { useGetFetch } from '../../utils/hooks/useCommonUtils.js'
+import { useDeleteItem, useFetchItems } from '../../utils/hooks/useCommonUtils.js'
 import { Heading } from '../../utils/components/parts/Heading.jsx'
 import { Button, ButtonGroup } from 'react-bootstrap'
 import { ListTable } from '../../utils/components/parts/ListTable.jsx'
@@ -11,12 +11,14 @@ export const Index = () => {
   const endpoint = '/api/fe/step1/3'
   const [data, setData] = useState([])
 
-  const { current, setCurrent, pages } = useGetFetch({
+  const { current, setCurrent, pages, fetchList } = useFetchItems({
     endpoint: endpoint,
     onSuccess: ({ data }) => {
       setData(data.payload.data)
     },
   })
+
+  const { confirmDelete } = useDeleteItem({ baseEndpoint: endpoint + '/' })
 
   const columns = [
     { key: 'title', label: 'タイトル', _props: { style: { width: '30%' } } },
@@ -32,7 +34,15 @@ export const Index = () => {
             <Button size={'sm'} variant={'outline-primary'} onClick={() => navigateTo('/step1_3/' + item.id + '/')}>
               編集
             </Button>
-            <Button size={'sm'} variant={'outline-danger'}>
+            <Button
+              size={'sm'}
+              variant={'outline-danger'}
+              onClick={() => {
+                confirmDelete(item.id, () => {
+                  fetchList()
+                })
+              }}
+            >
               削除
             </Button>
           </ButtonGroup>

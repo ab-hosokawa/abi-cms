@@ -4,7 +4,7 @@ import { Button } from 'react-bootstrap'
 import { FormBuilder } from '../../utils/components/form/FormBuilder'
 import { useApiExec } from '../../utils/hooks/useApi.js'
 import { useNavigation } from '../../utils/hooks/useNavigation.js'
-import { useRegisterItem } from '../../utils/hooks/useCommonUtils.js'
+import { useEditItem, useRegisterItem } from '../../utils/hooks/useCommonUtils.js'
 
 export const Form = () => {
   const formRef = useRef()
@@ -14,6 +14,7 @@ export const Form = () => {
     { formId: 'form-title', name: 'title', label: 'タイトル' },
     { formId: 'form-body', name: 'body', label: '本文' },
   ]
+  const { item } = useEditItem({ baseEndpoint })
   const { isSaving, onSaving } = useRegisterItem({
     baseEndpoint: baseEndpoint,
     onSuccess: () => {
@@ -24,7 +25,7 @@ export const Form = () => {
   return (
     <>
       <Heading title={'STEP1-3 登録'} />
-      <FormBuilder formSettings={formSettings} ref={formRef} />
+      <FormBuilder formSettings={formSettings} ref={formRef} defaultValue={item} />
       <Button
         disabled={isSaving}
         onClick={() => {

@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { useApiExec } from './useApi.js'
 import { useParams } from 'react-router-dom'
+import alert from 'bootstrap/js/src/alert.js'
 
 /**
  * 一覧取得
  */
-export const useGetFetch = ({
+export const useFetchItems = ({
   endpoint,
   method = 'get',
   params = {},
@@ -24,21 +25,7 @@ export const useGetFetch = ({
 
   useEffect(() => {
     if (!init) {
-      onExec({
-        endpoint,
-        method,
-        params: { current: current, limit: limit, ...params },
-        headers,
-        status,
-        onBefore,
-        onSuccess: (res) => {
-          setCurrent(res.data.payload.current)
-          setPages(res.data.payload.pages)
-          onSuccess(res)
-        },
-        onError,
-        onAfter,
-      })
+      fetchList()
     }
 
     return () => {
@@ -49,23 +36,33 @@ export const useGetFetch = ({
     }
   }, [current, pages])
 
-  return { current, pages, setCurrent, setPages }
+  const fetchList = () => {
+    onExec({
+      endpoint,
+      method,
+      params: { current: current, limit: limit, ...params },
+      headers,
+      status,
+      onBefore,
+      onSuccess: (res) => {
+        setCurrent(res.data.payload.current)
+        setPages(res.data.payload.pages)
+        onSuccess(res)
+      },
+      onError,
+      onAfter,
+    })
+  }
+
+  return { current, pages, setCurrent, setPages, fetchList }
 }
 
 /**
  * 記事登録
  */
-export const useRegisterItem = ({
-  baseEndpoint,
-  onBefore = () => {},
-  onSuccess = () => {},
-  onError = () => {
-    alert('入力エラーがあります')
-  },
-  onAfter = () => {},
-}) => {
+export const useRegisterItem = ({ baseEndpoint, onBefore = () => {}, onSuccess = () => {}, onError = () => {}, onAfter = () => {} }) => {
   const { id } = useParams()
-  const endpoint = id ? baseEndpoint + id + '/update' : baseEndpoint + 'store'
+  const endpoint = id ? baseEndpoint + id + '' : baseEndpoint + 'store'
   const method = id ? 'put' : 'post'
   const status = id ? 204 : 201
   const { onExec } = useApiExec()
@@ -95,4 +92,57 @@ export const useRegisterItem = ({
   }
 
   return { id, isSaving, onSaving }
+}
+
+export const useEditItem = ({ baseEndpoint, onSuccess = () => {}, onError = () => {} }) => {
+  const { id } = useParams()
+  const { onExec, abort } = useApiExec()
+  const [item, setItem] = useState({})
+  const endpoint = baseEndpoint + id + '/edit'
+  let init = false
+
+  useEffect(() => {
+    if (id && !init) {
+      onExec({
+        endpoint: endpoint,
+        status: 200,
+        onSuccess: ({ data }) => {
+          setItem(data.payload.data)
+          onSuccess(data)
+        },
+        onError: () => {
+          onError()
+        },
+      })
+    }
+
+    return () => {
+      if (init) {
+        abort()
+      }
+      init = true
+    }
+  }, [id])
+
+  return { item }
+}
+
+export const useDeleteItem = ({ baseEndpoint }) => {
+  const { onExec } = useApiExec()
+
+  const confirmDelete = (id, onSuccess = () => {}) => {
+    if (window.confirm('削除しますか？')) {
+      const endpoint = baseEndpoint + id
+      onExec({
+        endpoint: endpoint,
+        status: 204,
+        method: 'delete',
+        onSuccess: () => {
+          onSuccess()
+        },
+      })
+    }
+  }
+
+  return { confirmDelete }
 }

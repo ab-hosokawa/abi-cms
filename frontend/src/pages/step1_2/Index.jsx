@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Heading } from '../../utils/components/parts/Heading.jsx'
 import { Button } from 'react-bootstrap'
 import { useNavigation } from '../../utils/hooks/useNavigation.js'
-import { useGetFetch } from '../../utils/hooks/useCommonUtils.js'
+import { useFetchItems } from '../../utils/hooks/useCommonUtils.js'
 import { ListTable } from '../../utils/components/parts/ListTable'
 
 export const Index = () => {
@@ -10,7 +10,7 @@ export const Index = () => {
   const endpoint = '/api/fe/step1/2'
   const [data, setData] = useState([])
 
-  useGetFetch({
+  useFetchItems({
     endpoint: endpoint,
     onSuccess: ({ data }) => {
       setData(data.payload.data)
