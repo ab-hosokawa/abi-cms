@@ -33,10 +33,6 @@ jobs:
             
             docker exec cms_frontend npm install || exit 1
             
-            # ポート3000を使用しているプロセスを検索して終了
-            # docker exec website sh -c "lsof -i:3000 -t | xargs kill -9" || true
-            # 少し待機
-            # sleep 2
             # コンテナを再起動
             docker restart website
   
@@ -48,6 +44,18 @@ jobs:
             
             # docker exec website sh -c "lsof -i:3000"
             
+            docker exec website npm cache clean --force
+            
+            sleep 5
+            
+            docker exec website rm -rf node_modules
+            
+            sleep 5
+            
+            docker exec website rm -f package-lock.json
+            
+            sleep 2
+            
             docker exec website npm install
             
             sleep 10
@@ -55,7 +63,7 @@ jobs:
             # Next.jsアプリケーションを再ビルド
             # docker exec website npm run build
             # docker exec website npm run start
-            docker exec -d website npm run dev
+            # docker exec -d website npm run dev
             docker logs website
             # docker exec website cat /var/log/nginx/error.log
             # docker exec website cat /var/log/next.log            
