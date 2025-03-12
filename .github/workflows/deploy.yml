@@ -33,7 +33,20 @@ jobs:
             
             docker exec cms_frontend npm install || exit 1
             
-            docker exec website npm install || exit 1
+            # コンテナを完全に停止
+            docker stop website
+            # 少し待機
+            sleep 5
+            
+            # コンテナを起動
+            docker start website
+            
+            # コンテナが完全に起動するまで待機
+            sleep 10
+            
+            # 環境を確認（オプション）
+            docker exec website node -v
+            docker exec website npm -v
             
             cd ./backend/src/
           
