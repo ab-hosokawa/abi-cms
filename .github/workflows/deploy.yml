@@ -56,7 +56,7 @@ jobs:
             
             sleep 2
             
-            docker exec website npm install --legacy-peer-deps
+            docker exec website npm install
             
             sleep 10
   
