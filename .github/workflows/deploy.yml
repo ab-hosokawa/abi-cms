@@ -42,6 +42,11 @@ jobs:
             docker exec website node -v
             docker exec website npm -v
             
+            docker exec website apt-get update
+            docker exec website apt-get install -y lsof
+            
+            sleep 5
+            
             docker exec website sh -c "lsof -i:3000"
             
             # docker exec website npm install
