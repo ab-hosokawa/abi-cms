@@ -2,6 +2,7 @@
 import { useContext, useState } from 'react';
 import { StoreContext } from '@/lib/context/StoreContext';
 import Link from 'next/link';
+import {Pagination, Timeline} from 'flowbite-react';
 
 export default function Page() {
   const { siteState } = useContext(StoreContext);
@@ -93,46 +94,20 @@ export default function Page() {
 
             {/* ページネーション */}
             {totalPages > 1 && (
-              <div className="flex justify-center items-center gap-2 mt-12">
-                <button
-                  onClick={() => handlePageChange(currentPage - 1)}
-                  disabled={currentPage === 1}
-                  className={`px-4 py-2 text-[15px] rounded-md border ${
-                    currentPage === 1 ? ' bg-gray-400 text-gray-500 cursor-not-allowed' : 'bg-white text-gray-600 hover:bg-gray-50'
-                  }`}
-                >
-                  前へ
-                </button>
-
-                <div className="flex gap-2">
-                  {[...Array(totalPages)].map((_, index) => (
-                    <button
-                      key={index + 1}
-                      onClick={() => handlePageChange(index + 1)}
-                      className={`w-10 h-10 flex items-center justify-center rounded-md text-[15px] ${
-                        currentPage === index + 1 ? 'bg-gray-900 text-white' : 'text-gray-600 hover:bg-gray-50'
-                      }`}
-                    >
-                      {index + 1}
-                    </button>
-                  ))}
-                </div>
-
-                <button
-                  onClick={() => handlePageChange(currentPage + 1)}
-                  disabled={currentPage === totalPages}
-                  className={`px-4 py-2 text-[15px] rounded-md border ${
-                    currentPage === totalPages
-                      ? ' bg-gray-400 text-gray-500 cursor-not-allowed' : 'bg-white text-gray-600 hover:bg-gray-50'
-                  }`}
-                >
-                  次へ
-                </button>
+              <div className="flex justify-center mt-12">
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={handlePageChange}
+                  showIcons={true}
+                  previousLabel="前へ"
+                  nextLabel="次へ"
+                />
               </div>
             )}
           </>
         ) : (
-          <p className="text-center text-gray-600">記事がありません</p>
+          <p className="text-center text-gray-500">記事がありません</p>
         )}
       </div>
     </div>

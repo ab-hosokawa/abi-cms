@@ -1,4 +1,4 @@
-import './globals.css';
+import './global.scss';
 import Html from '@/components/organisms/layout/Html';
 import { API_ENDPOINT } from '@/lib/utils/const';
 export const metadata = {

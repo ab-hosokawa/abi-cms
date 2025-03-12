@@ -1,4 +1,3 @@
-// import CompressionPlugin from 'compression-webpack-plugin'; // 圧縮用プラグイン
 /** @type {import('next').NextConfig} */
 const isProd = process.env.NODE_ENV === 'production';
 const nextConfig = {
@@ -12,9 +11,6 @@ const nextConfig = {
         styledComponents: true,
     },
     webpack(config, { isServer }) {
-        // if (!isServer) {
-        //     config.plugins.push(localesPlugin.webpack({ locales: [] }));
-        // }
         config.module.rules.push({
             test: /\.svg$/,
             use: ({ resource }) => ({
