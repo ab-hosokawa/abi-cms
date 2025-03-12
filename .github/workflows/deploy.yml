@@ -33,10 +33,6 @@ jobs:
             
             docker exec cms_frontend npm install || exit 1
             
-            docker start website
-            
-            sleep 10
-            
             docker exec website npm install || exit 1
             
             cd ./backend/src/
