@@ -36,7 +36,7 @@ jobs:
             # ポート3000を使用しているプロセスを検索して終了
             # docker exec website sh -c "lsof -i:3000 -t | xargs kill -9" || true
             # 少し待機
-            sleep 2
+            # sleep 2
             # コンテナを再起動
             docker restart website
   
