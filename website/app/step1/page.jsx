@@ -1,5 +1,5 @@
 'use client';
-import { useCallback, useContext, useState } from 'react';
+import React, { useCallback, useContext, useState } from 'react';
 import { StoreContext } from '@/lib/context/StoreContext';
 import { Pagination } from 'flowbite-react';
 import useRouterWithEvents from 'use-router-with-events';
@@ -55,12 +55,11 @@ export default function Page() {
         {hasArticles ? (
           <>
             {/* 記事一覧 */}
-            <article className="border-t mb-16" role="articleList">
+            <article className="border-t mb-16" key={'articleList'}>
               {currentArticles.map(([key, article]) => (
-                <>
+                <React.Fragment key={key}>
                   <article
                     role={'link'}
-                    key={key}
                     href={`/step1/${encodeURIComponent(key)}`}
                     className="block border-b hover:bg-gray-950 transition-colors duration-200"
                     onClick={(e) => {
@@ -101,7 +100,7 @@ export default function Page() {
                       </div>
                     </div>
                   </article>
-                </>
+                </React.Fragment>
               ))}
             </article>
 
