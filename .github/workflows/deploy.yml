@@ -54,7 +54,7 @@ jobs:
   
             # Next.jsアプリケーションを再ビルド
             docker exec website npm run build
-            docker exec -d website sh -c "PORT=3001 npm run start"           
+            docker exec -d website npm run dev   
             
             cd ./backend/src/
           
