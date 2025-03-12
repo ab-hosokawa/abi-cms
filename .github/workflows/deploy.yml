@@ -33,21 +33,34 @@ jobs:
             
             docker exec cms_frontend npm install || exit 1
             
-            # コンテナを完全に停止
-            docker stop website
+            # Nodeプロセスを終了
+            docker exec website pkill -f node || true
+            
+            # 少し待機してプロセスが確実に終了するのを待つ
+            sleep 3
+            
+            # ポート3000を使用しているプロセスを検索して終了
+            docker exec website sh -c "lsof -i:3000 -t | xargs kill -9" || true
+            
             # 少し待機
-            sleep 5
             
-            # コンテナを起動
-            docker start website
-            
+            sleep 2
+  
+            # コンテナを再起動
+            docker restart website
+  
             # コンテナが完全に起動するまで待機
             sleep 10
             
-            # 環境を確認（オプション）
             docker exec website node -v
             docker exec website npm -v
             
+            docker exec website npm install
+  
+            # Next.jsアプリケーションを再ビルド
+            docker exec website npm run build
+            docker exec -d website npm run start
+  
             cd ./backend/src/
           
             docker exec -it cms_backend bash
