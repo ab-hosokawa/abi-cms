@@ -42,11 +42,13 @@ jobs:
             docker exec website node -v
             docker exec website npm -v
             
-            docker exec website npm install
+            docker exec website sh -c "lsof -i:3000"
+            
+            # docker exec website npm install
   
             # Next.jsアプリケーションを再ビルド
-            docker exec website npm run build
-            docker exec website npm run start         
+            # docker exec website npm run build
+            # docker exec website npm run start         
             
             cd ./backend/src/
           
