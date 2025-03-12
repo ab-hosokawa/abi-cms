@@ -33,11 +33,14 @@ jobs:
             
             docker exec cms_frontend npm install || exit 1
             
-            # websiteコンテナのnpmキャッシュをクリアして再インストール
+            # websiteコンテナのnpmキャッシュをクリアして依存関係を再インストール
             docker exec website npm cache clean --force
             docker exec website rm -rf node_modules
-            docker exec website npm install || exit 1
-            
+            docker exec website rm -f package-lock.json
+            docker exec website npm install
+            # autoprefixerを明示的にインストール
+            docker exec website npm install autoprefixer@10.4.21 --save-dev
+  
             cd ./backend/src/
           
             docker exec -it cms_backend bash
