@@ -57,9 +57,9 @@ jobs:
             # docker exec website npm run build
             # docker exec website npm run start
             docker exec -d website npm run dev
-            # docker logs website
+            docker logs website
             # docker exec website cat /var/log/nginx/error.log
-            docker exec website cat /var/log/next.log            
+            # docker exec website cat /var/log/next.log            
             
             cd ./backend/src/
           
