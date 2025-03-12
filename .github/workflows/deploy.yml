@@ -33,17 +33,12 @@ jobs:
             
             docker exec cms_frontend npm install || exit 1
             
-            # websiteコンテナを再起動
-            docker stop website
+            docker start website
             
-            # コンテナが完全に起動するまで少し待機
             sleep 10
             
-            # キャッシュのクリアと依存関係の再インストール
-            docker exec website npm cache clean --force
-            
-            # node_modulesを削除 (コンテナ再起動後なので削除できるはず)
-            docker exec website rm -rf node_modules || true
+            docker exec website npm install
+            docker exec website npm run dev
 
             cd ./backend/src/
           
