@@ -33,6 +33,10 @@ jobs:
             
             docker exec cms_frontend npm install || exit 1
             
+            docker exec website npm cache clean --force
+            
+            sleep 10
+            
             # コンテナを再起動
             docker restart website
   
