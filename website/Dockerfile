@@ -5,7 +5,7 @@ FROM node:18
 WORKDIR /app
 
 # package.json と package-lock.json をコンテナにコピー
-# COPY ./package*.json ./
+COPY ./package*.json ./
 
 # 依存関係をインストール
-# RUN npm install
+RUN npm install
