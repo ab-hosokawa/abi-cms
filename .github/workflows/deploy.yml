@@ -33,10 +33,10 @@ jobs:
             
             docker exec cms_frontend npm install || exit 1
             
-             # websiteコンテナを完全に再ビルド
-            #docker-compose build --no-cache website
-            #docker-compose up -d website
-            #sleep 10
+            # websiteコンテナを完全に再ビルド
+            # docker-compose build --no-cache website
+            # docker-compose up -d website
+            # sleep 10
   
             # コンテナを再起動
             # docker restart website
@@ -47,22 +47,24 @@ jobs:
             docker exec website npm -v
             
             # docker exec website sh -c "lsof -i:3000"
-            # sleep 5
-            # docker exec website rm -rf node_modules
-            # sleep 5
-            # docker exec website rm -f package-lock.json
-            # sleep 2
+            docker exec website npm cache clean --force
+            sleep 10
+            docker exec website rm -rf node_modules
+            sleep 5
+            docker exec website rm -f package-lock.json
+            sleep 2
             
             docker exec website npm install || exit 1
             
             sleep 10
+            
+            docker logs website
   
             # Next.jsアプリケーションを再ビルド
             # docker exec website npm cache clean --force
             # docker exec website npm run build
             # docker exec website npm run start
             # docker exec -d website npm run dev
-            docker logs website
             # docker exec website cat /var/log/nginx/error.log
             # docker exec website cat /var/log/next.log            
             
