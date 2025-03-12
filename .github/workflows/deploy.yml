@@ -50,12 +50,6 @@ jobs:
             docker exec website npm install
             docker exec website npm install autoprefixer@10.4.21 --save-dev
             
-            # Next.jsアプリケーションを再ビルド
-            docker exec website npm run build
-            
-            # Next.jsアプリケーションを再起動（必要に応じて）
-            docker exec website npm run start
-
             cd ./backend/src/
           
             docker exec -it cms_backend bash
