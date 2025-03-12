@@ -32,7 +32,12 @@ jobs:
             git pull
             
             docker exec cms_frontend npm install || exit 1
-
+            
+            # websiteコンテナのnpmキャッシュをクリアして再インストール
+            docker exec website npm cache clean --force
+            docker exec website rm -rf node_modules
+            docker exec website npm install || exit 1
+            
             cd ./backend/src/
           
             docker exec -it cms_backend bash
