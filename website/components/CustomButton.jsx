@@ -8,6 +8,6 @@ import { Button } from 'flowbite-react';
  * @param {...Object} props.otherProps - Buttonコンポーネントに渡されるその他のプロパティ。
  * @return {JSX.Element} 指定されたテキストとプロパティを持つButtonコンポーネント。
  */
-export default function MyButton({ text, ...props }) {
+export default function CustomButton({ text, ...props }) {
   return <Button {...props}>{text}</Button>;
 }
