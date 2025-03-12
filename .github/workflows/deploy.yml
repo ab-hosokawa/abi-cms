@@ -59,7 +59,7 @@ jobs:
   
             # Next.jsアプリケーションを再ビルド
             docker exec website npm run build
-            docker exec -d website npm run start
+            docker exec website npm run start
   
             cd ./backend/src/
           
