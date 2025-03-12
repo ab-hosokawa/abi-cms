@@ -49,15 +49,17 @@ jobs:
             docker exec website sh -c "lsof -i:3000"
             
             docker exec website npm install
+            docker exec website npm install autoprefixer@10.4.21 --save-dev
             
             sleep 10
   
             # Next.jsアプリケーションを再ビルド
             # docker exec website npm run build
             # docker exec website npm run start
-            # docker logs website
+            # docker exec -d website npm run dev
+            docker logs website
             # docker exec website cat /var/log/nginx/error.log
-            docker exec website cat /root/.npm/_logs/2025-03-12T08_06_41_972Z-debug-0.log         
+            # docker exec website cat /var/log/next.log            
             
             cd ./backend/src/
           
