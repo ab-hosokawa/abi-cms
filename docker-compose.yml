@@ -84,7 +84,8 @@ services:
     volumes:
       - ./website:/app # Next.jsのソースコードをコンテナ内にマウント
       - website_node_modules:/app/node_modules # node_modulesを分離
-    command: ["npm", "run", "start"] # 開発サーバーの起動コマンド
+      - website_next_build:/app/.next # .nextディレクトリを分離
+    command: [ "bash", "-c", "npm run build && npm run start" ] # ビルド
     ports:
       - "3000:3000"
     networks:
