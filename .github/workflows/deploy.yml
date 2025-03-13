@@ -39,10 +39,11 @@ jobs:
           # sleep 10
 
           # コンテナを再起動
+          docker-compose restart
           # websiteのみ
-          docker restart website
+          # docker restart website
           # reverse-proxyのみ
-          docker-compose restart reverse-proxy
+          # docker-compose restart reverse-proxy
           sleep 10
 
           #コンテナの状態確認
@@ -63,8 +64,8 @@ jobs:
           # sleep 10
 
           # Nginxのログ確認
-          # docker exec reverse-proxy ls -la /var/log/nginx/
-          # docker exec reverse-proxy cat /var/log/nginx/error.log
+          docker exec reverse-proxy ls -la /var/log/nginx/
+          docker exec reverse-proxy cat /var/log/nginx/error.log
 
           cd ./backend/src/
 
