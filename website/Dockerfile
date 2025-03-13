@@ -8,7 +8,7 @@ WORKDIR /app
 COPY ./package*.json ./
 
 # 依存関係をインストール
-RUN npm install
+RUN npm ci --only=production
 
 # アプリケーションのソースコードをコピー
 COPY . .
@@ -18,4 +18,4 @@ RUN npm run build
 
 # アプリケーションを実行
 EXPOSE 3000
-CMD ["npm", "start"]
+CMD ["npm", "run", "start"]
