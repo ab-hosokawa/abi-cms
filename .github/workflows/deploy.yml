@@ -40,10 +40,10 @@ jobs:
 
           # コンテナを再起動
           # websiteのみ
-          docker restart website
+          # docker restart website
           # reverse-proxyのみ
-          docker-compose restart reverse-proxy
-          sleep 10
+          # docker-compose restart reverse-proxy
+          # sleep 10
 
           #コンテナの状態確認
           docker ps | grep website
