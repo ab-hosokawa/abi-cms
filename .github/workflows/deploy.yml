@@ -68,7 +68,7 @@ jobs:
 
           # Nginxのログ確認
           docker exec reverse-proxy ls -la /var/log/nginx/
-          docker exec reverse-proxy cat /var/log/nginx/error.log
+          docker exec reverse-proxy cat /var/log/nginx/error.log --tail 100
 
           cd ./backend/src/
 
