@@ -42,7 +42,7 @@ jobs:
           # websiteのみ
           docker restart website
           # reverse-proxyのみ
-          docker-compose restart reverse-proxy
+          # docker-compose restart reverse-proxy
           sleep 10
 
           #コンテナの状態確認
