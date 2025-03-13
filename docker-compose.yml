@@ -33,7 +33,7 @@ services:
       DB_HOST: cms_db # データベースサービス名（Dockerネットワーク内で解決）
       DB_PORT: 3306
       DB_DATABASE: ${MYSQL_DATABASE}
-      DB_USERNAME: ${MYSQL_USER} 
+      DB_USERNAME: ${MYSQL_USER}
       DB_PASSWORD: ${MYSQL_PASSWORD}
     depends_on:
       - database
@@ -60,10 +60,10 @@ services:
     restart: always # コンテナが停止した場合に自動再起動
     environment:
       TZ: Asia/Tokyo # タイムゾーンを日本時間に設定
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}   # .env から読み込み
-      MYSQL_DATABASE: ${MYSQL_DATABASE}             # .env から読み込み
-      MYSQL_USER: ${MYSQL_USER}                     # .env から読み込み
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}             # .env から読み込み
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD} # .env から読み込み
+      MYSQL_DATABASE: ${MYSQL_DATABASE} # .env から読み込み
+      MYSQL_USER: ${MYSQL_USER} # .env から読み込み
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD} # .env から読み込み
     volumes:
       - mysql_data:/var/lib/mysql # データベースデータを永続化
       - ./database/my.cnf:/etc/mysql/my.cnf # MySQLの設定ファイルをマウント
@@ -84,12 +84,13 @@ services:
     volumes:
       - ./website:/app # Next.jsのソースコードをコンテナ内にマウント
       - website_node_modules:/app/node_modules # node_modulesを分離
-    command: ["npm", "run", "dev", "--", "-H", "0.0.0.0"] # 開発サーバーの起動コマンド
+    # command: ["npm", "run", "dev", "--", "-H", "0.0.0.0"] # 開発サーバーの起動コマンド
+    command: sh -c "npm run build && npm run start"
     # リソース制限を追加
     deploy:
       resources:
         limits:
-          memory: 8G  # メモリ上限を8GBに設定
+          memory: 8G # メモリ上限を8GBに設定
     networks:
       - cms_network
 
