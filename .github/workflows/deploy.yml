@@ -47,19 +47,17 @@ jobs:
             docker exec website npm -v
             
             # docker exec website sh -c "lsof -i:3000"
-            docker exec website npm cache clean --force
-            sleep 10
-            docker exec website rm -rf node_modules
-            sleep 5
-            docker exec website rm -f package-lock.json
-            sleep 2
+            # docker exec website npm cache clean --force
+            # sleep 10
+            # docker exec website rm -rf node_modules
+            # sleep 5
+            # docker exec website rm -f package-lock.json
+            # sleep 2
+            # docker exec website npm install
+            # sleep 10
             
-            docker exec website npm install
+            docker logs website
             
-            sleep 10
-            
-            docker logs website || exit 1
-  
             # Next.jsアプリケーションを再ビルド
             # docker exec website npm cache clean --force
             # docker exec website npm run build
