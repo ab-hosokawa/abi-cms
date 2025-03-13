@@ -9,3 +9,9 @@ COPY ./package*.json ./
 
 # 依存関係をインストール
 RUN npm ci --only=production
+
+# アプリケーションのソースコードをコピー
+COPY . .
+
+# ビルド
+RUN npm run build
