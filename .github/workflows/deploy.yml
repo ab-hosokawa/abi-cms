@@ -43,7 +43,7 @@ jobs:
             # コンテナが完全に起動するまで待機
             # sleep 10
             
-            docker ps | grep website
+            # docker ps | grep website
             docker exec website node -v
             docker exec website npm -v
             
@@ -58,14 +58,13 @@ jobs:
             # sleep 10
             
             docker logs --tail 100 website
+            docker exec website cat /var/log/nginx/error.log
+            docker exec website cat /var/log/next.log
             
             # Next.jsアプリケーションを再ビルド
             # docker exec website npm cache clean --force
             # docker exec website npm run build
-            # docker exec website npm run start
-            # docker exec -d website npm run dev
-            # docker exec website cat /var/log/nginx/error.log
-            # docker exec website cat /var/log/next.log            
+            # docker exec website npm run start           
             
             cd ./backend/src/
           
