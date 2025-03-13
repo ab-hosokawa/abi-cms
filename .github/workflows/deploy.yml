@@ -41,7 +41,7 @@ jobs:
           # コンテナを再起動
           docker restart website
           # 必要ならreverse-proxyも再起動する
-          # docker-compose restart reverse-proxy
+          docker-compose restart reverse-proxy
           sleep 10
 
           #コンテナの状態確認
