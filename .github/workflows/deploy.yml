@@ -35,8 +35,8 @@ jobs:
 
           # websiteコンテナを完全に再ビルド
           # docker-compose build --no-cache website
-          # docker-compose up -d website
-          # sleep 10
+          docker-compose up -d website
+          sleep 10
 
           # コンテナを再起動
           # docker-compose restart
@@ -50,7 +50,7 @@ jobs:
           # docker ps
           # docker image ls
           # docker ps | grep website
-          docker logs reverse-proxy --tail 100
+          docker logs reverse-proxy
           docker exec website node -v
           docker exec website npm -v
           docker logs website
