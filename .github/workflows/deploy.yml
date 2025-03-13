@@ -47,9 +47,9 @@ jobs:
           # sleep 10
 
           #コンテナの状態確認
-          docker ps
-          docker image ls
-          docker ps | grep website
+          # docker ps
+          # docker image ls
+          # docker ps | grep website
           # docker logs reverse-proxy
           docker exec website node -v
           docker exec website npm -v
@@ -67,8 +67,8 @@ jobs:
           # sleep 10
 
           # Nginxのログ確認
-          # docker exec reverse-proxy ls -la /var/log/nginx/
-          # docker exec reverse-proxy cat /var/log/nginx/error.log
+          docker exec reverse-proxy ls -la /var/log/nginx/
+          docker exec reverse-proxy cat /var/log/nginx/error.log
 
           cd ./backend/src/
 
