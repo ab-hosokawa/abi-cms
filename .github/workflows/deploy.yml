@@ -68,7 +68,7 @@ jobs:
 
           # Nginxのログ確認
           docker exec reverse-proxy ls -la /var/log/nginx/
-          docker exec reverse-proxy sh -c "tail -n 100 /var/log/nginx/error.log"
+          podman exec reverse-proxy sh -c "tail -n 100 /var/log/nginx/error.log"
 
           cd ./backend/src/
 
