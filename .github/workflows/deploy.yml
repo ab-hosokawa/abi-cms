@@ -37,7 +37,7 @@ jobs:
           docker-compose build --no-cache website
           docker-compose up -d website
           # docker image prune -a -f
-          # sleep 10
+          sleep 10
 
           # コンテナを再起動
           # docker-compose restart
