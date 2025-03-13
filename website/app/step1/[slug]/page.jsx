@@ -4,6 +4,7 @@ import { useContext } from 'react';
 import { StoreContext } from '@/lib/context/StoreContext';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
+import CustomButton from '@/components/CustomButton.jsx';
 
 export default function ArticleDetailPage() {
   // URLパラメータとルーターの取得
@@ -68,12 +69,19 @@ export default function ArticleDetailPage() {
 
       {/* フッター */}
       <div className="mt-12 pt-6 border-t">
-        <Link href="/step1/" className="text-gray-100 hover:text-gray-400 flex items-center justify-center">
-          <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
-          記事一覧に戻る
-        </Link>
+        <CustomButton
+          color={'dark'}
+          text={'記事一覧に戻る'}
+          icon={
+            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+          }
+          onClick={() => {
+            console.log('click');
+            router.push('/step1/');
+          }}
+        />
       </div>
     </div>
   );

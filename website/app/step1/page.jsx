@@ -139,8 +139,12 @@ export default function Page() {
                     onClick={(e) => {
                       handleClick(e);
                     }}
-                    className={key > 1 ? 'block mt-8 max-md:mt-5' : 'block'}
+                    className={key > 0 ? 'block mt-8 max-md:mt-5' : 'block'}
                   >
+                    {(() => {
+                      console.log('key:', key);
+                      return null;
+                    })()}
                     <article className="py-4 px-4">
                       <div className="flex items-center justify-between">
                         <div className="flex-1">
@@ -179,7 +183,6 @@ export default function Page() {
               ))}
             </article>
 
-            {/* ページネーション */}
             {/* ページネーション */}
             {totalPages > 1 ? (
               <nav>
