@@ -35,8 +35,8 @@ jobs:
 
           # websiteコンテナを完全に再ビルド
           # docker-compose build --no-cache website
-          docker-compose up -d website
-          sleep 10
+          # docker-compose up -d website
+          # sleep 10
 
           # コンテナを再起動
           # docker-compose restart
@@ -47,14 +47,14 @@ jobs:
           # sleep 10
 
           #コンテナの状態確認
-          # docker ps
-          # docker image ls
+          docker ps
+          docker image ls
           # docker ps | grep website
-          docker logs reverse-proxy
-          docker exec website node -v
-          docker exec website npm -v
-          docker logs website
-          docker exec website ps aux | grep node
+          # docker logs reverse-proxy
+          # docker exec website node -v
+          # docker exec website npm -v
+          # docker logs website
+          # docker exec website ps aux | grep node
 
           # nextjs用のpackageを再インストール
           # docker exec website npm cache clean --force
