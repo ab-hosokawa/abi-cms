@@ -36,7 +36,7 @@ jobs:
           # websiteコンテナを完全に再ビルド
           docker-compose build --no-cache website
           docker-compose up -d website
-          docker image prune -a -f # 利用していないimageを削除
+          # docker image prune -a -f # 利用していないimageを削除
           sleep 10
 
           # コンテナを再起動
