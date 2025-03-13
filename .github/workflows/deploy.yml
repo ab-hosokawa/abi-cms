@@ -62,7 +62,7 @@ jobs:
             
             # Next.jsアプリケーションを再ビルド
             # docker exec website npm run build
-            sleep 10
+            # sleep 10
             # docker exec website npm run start
             
             docker logs website
@@ -71,9 +71,9 @@ jobs:
             # docker exec website cat /var/log/next.log
             # docker exec website sh -c "lsof -i:3000"
             
-            docker exec reverse-proxy cat /var/log/nginx/error.log
+            docker exec reverse-proxy cat /var/log/nginx/site-error.log
+            # docker exec reverse-proxy cat /var/log/nginx/site-access.log
             docker exec reverse-proxy ping website
-            docker-compose restart reverse-proxy
             
             cd ./backend/src/
           
