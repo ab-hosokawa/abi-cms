@@ -51,12 +51,6 @@ jobs:
             
             docker exec website npm -v
             
-            docker logs website
-            
-            # docker exec website cat /var/log/nginx/error.log
-            # docker exec website cat /var/log/next.log
-            docker exec website sh -c "lsof -i:3000"
-            
             docker exec website npm cache clean --force
             sleep 10
             docker exec website rm -rf node_modules
@@ -67,9 +61,14 @@ jobs:
             sleep 10
             
             # Next.jsアプリケーションを再ビルド
-            docker exec website npm run build
+            # docker exec website npm run build
             sleep 10
-            docker exec website npm run start           
+            # docker exec website npm run start
+            
+            # docker logs website
+            # docker exec website cat /var/log/nginx/error.log
+            # docker exec website cat /var/log/next.log
+            docker exec website sh -c "lsof -i:3000"           
             
             cd ./backend/src/
           
