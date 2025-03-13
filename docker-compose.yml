@@ -84,13 +84,13 @@ services:
     volumes:
       - ./website:/app # Next.jsのソースコードをコンテナ内にマウント
       - website_node_modules:/app/node_modules # node_modulesを分離
-    command: ["npm", "run", "dev", "--", "-H", "0.0.0.0"] # 開発サーバーの起動コマンド
-    # command: ["npm", "run", "build:start"] # 本番サーバでのコマンド
+    # command: ["npm", "run", "dev", "--", "-H", "0.0.0.0"] # 開発サーバーの起動コマンド
+    command: ["npm", "run", "build:start"] # 本番サーバでのコマンド
     # リソース制限を追加
     deploy:
       resources:
         limits:
-          memory: 8G # メモリ上限を8GBに設定
+          memory: 4G # メモリ上限を8GBに設定
     networks:
       - cms_network
 
