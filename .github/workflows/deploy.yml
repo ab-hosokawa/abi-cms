@@ -40,10 +40,10 @@ jobs:
 
           # コンテナを再起動
           # websiteのみ
-          # docker restart website
+          docker restart website
           # reverse-proxyのみ
           # docker-compose restart reverse-proxy
-          # sleep 10
+          sleep 10
 
           #コンテナの状態確認
           docker ps | grep website
@@ -65,11 +65,6 @@ jobs:
           # Nginxのログ確認
           # docker exec reverse-proxy ls -la /var/log/nginx/
           # docker exec reverse-proxy cat /var/log/nginx/error.log
-          
-          docker exec website npm run build
-          docker exec -d website npm run start
-          
-          # docker exec -d website npm run dev
 
           cd ./backend/src/
 
