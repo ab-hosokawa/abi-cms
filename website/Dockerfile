@@ -10,6 +10,6 @@ COPY ./package*.json ./
 # 依存関係をインストール
 RUN npm install
 
-COPY . .
+#COPY . .
 
-RUN npm run build
+#RUN npm run build
