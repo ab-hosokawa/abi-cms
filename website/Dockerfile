@@ -9,13 +9,3 @@ COPY ./package*.json ./
 
 # 依存関係をインストール
 RUN npm ci --only=production
-
-# アプリケーションのソースコードをコピー
-COPY . .
-
-# ビルド
-RUN npm run build
-
-# アプリケーションを実行
-EXPOSE 3000
-CMD ["npm", "run" , "start"]
