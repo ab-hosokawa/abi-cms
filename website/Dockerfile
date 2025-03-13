@@ -9,12 +9,3 @@ COPY ./package*.json ./
 
 # 依存関係をインストール
 RUN npm install
-
-# ソースコードをコピー
-COPY . .
-
-# アプリケーションをビルド
-RUN npm run build
-
-# コンテナ起動時に実行されるコマンド
-CMD ["npm", "run", "start"]
