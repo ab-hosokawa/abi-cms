@@ -43,14 +43,14 @@ jobs:
           # 必要ならreverse-proxyも再起動する
           # docker-compose restart reverse-proxy
           sleep 10
-          
+
           #コンテナの状態確認
           docker ps | grep website
           docker exec website node -v
           docker exec website npm -v
           docker logs website
           docker exec website ps aux | grep node
-          
+
           # nextjs用のpackageを再インストール
           # docker exec website npm cache clean --force
           # sleep 10
