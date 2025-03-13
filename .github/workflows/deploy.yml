@@ -41,13 +41,15 @@ jobs:
           # コンテナを再起動
           # docker-compose restart
           # websiteのみ
-          docker restart website
+          # docker restart website
           # reverse-proxyのみ
           # docker-compose restart reverse-proxy
-          sleep 10
+          # sleep 10
 
           #コンテナの状態確認
-          docker ps | grep website
+          docker ps
+          docker image ls
+          # docker ps | grep website
           docker exec website node -v
           docker exec website npm -v
           docker logs website
