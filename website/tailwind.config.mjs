@@ -1,6 +1,5 @@
 /** @type {import('tailwindcss').Config} */
 import flowbite from 'flowbite-react/tailwind';
-import path from 'path';
 export default {
   content: [
     __dirname + '/pages/**/*.{js,ts,jsx,tsx,mdx}',
