@@ -39,7 +39,7 @@ jobs:
           # sleep 10
 
           # コンテナを再起動
-          # docker-compose restart
+          docker-compose restart
           # websiteのみ
           # docker restart website
           # reverse-proxyのみ
