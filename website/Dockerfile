@@ -12,6 +12,8 @@ RUN npm install
 
 COPY . .
 
+RUN npm list
+
 RUN npm run build
 
 # アプリケーションを実行
