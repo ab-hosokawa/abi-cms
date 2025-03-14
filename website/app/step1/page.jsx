@@ -126,7 +126,6 @@ export default function Page() {
   return (
     <div className="container mx-auto px-5 py-12">
       <h2 className="text-[32px] font-bold mb-12 text-center">記事一覧</h2>
-      <p>test</p>
       <div className="space-y-0">
         {hasArticles ? (
           <>
