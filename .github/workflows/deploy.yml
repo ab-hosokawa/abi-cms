@@ -34,18 +34,18 @@ jobs:
           docker exec cms_frontend npm install || exit 1
 
           # websiteコンテナを完全に再ビルド
-          docker-compose build --no-cache website
-          docker-compose up -d website
+          # docker-compose build --no-cache website
+          # docker-compose up -d website
           # docker image prune -a -f # 利用していないimageを削除
-          sleep 10
+          # sleep 10
 
           # コンテナを再起動
           # docker-compose restart
           # websiteのみ
-          # docker restart website
+          docker restart website
           # reverse-proxyのみ
-          # docker-compose restart reverse-proxy
-          # sleep 10
+          docker-compose restart reverse-proxy
+          sleep 10
 
           #コンテナの状態確認
           docker ps
