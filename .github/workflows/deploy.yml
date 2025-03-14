@@ -31,7 +31,7 @@ jobs:
           cd /root/abi-cms/
           # git pull
           git stash
-          git pull origin master
+          git pull
           git stash pop
 
           docker exec cms_frontend npm install || exit 1
