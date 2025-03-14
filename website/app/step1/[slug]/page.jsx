@@ -5,6 +5,7 @@ import { StoreContext } from '@/lib/context/StoreContext';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import CustomButton from '@/components/CustomButton.jsx';
+import { SlArrowRight } from 'react-icons/sl';
 
 export default function ArticleDetailPage() {
   // URLパラメータとルーターの取得
@@ -68,19 +69,17 @@ export default function ArticleDetailPage() {
       </article>
 
       {/* フッター */}
-      <div className="mt-12 pt-6 border-t">
+      <div className="mt-12 pt-6 border-t text-center">
         <CustomButton
-          color={'dark'}
+          color={'gray'}
+          size={'sm'}
           text={'記事一覧に戻る'}
-          icon={
-            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-          }
+          icon={<span className="text-[.7rem] ms-1"><SlArrowRight /></span>}
           onClick={() => {
             console.log('click');
             router.push('/step1/');
           }}
+          className="inline-block"
         />
       </div>
     </div>
