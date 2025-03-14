@@ -33,23 +33,27 @@ export const ListPagination = ({ current = 1, pages = 1, size = 'sm', onChgPage 
 
   return (
     <>
-      <div className={'d-flex justify-content-end'}>
-        <Pagination size={size}>
-          <Pagination.Prev
-            onClick={() => {
-              onChgPage(Math.max(1, current - 1))
-            }}
-            disabled={current === 1}
-          />
-          {createItems()}
-          <Pagination.Next
-            onClick={() => {
-              onChgPage(Math.min(pages, current + 1))
-            }}
-            disabled={current === pages}
-          />
-        </Pagination>
-      </div>
+      {current && pages && (
+        <>
+          <div className={'d-flex justify-content-end'}>
+            <Pagination size={size}>
+              <Pagination.Prev
+                onClick={() => {
+                  onChgPage(Math.max(1, current - 1))
+                }}
+                disabled={current === 1}
+              />
+              {createItems()}
+              <Pagination.Next
+                onClick={() => {
+                  onChgPage(Math.min(pages, current + 1))
+                }}
+                disabled={current === pages}
+              />
+            </Pagination>
+          </div>
+        </>
+      )}
     </>
   )
 }

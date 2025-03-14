@@ -94,10 +94,10 @@ export const useRegisterItem = ({ baseEndpoint, onBefore = () => {}, onSuccess =
   return { id, isSaving, onSaving }
 }
 
-export const useEditItem = ({ baseEndpoint, onSuccess = () => {}, onError = () => {} }) => {
+export const useEditItem = ({ baseEndpoint, onSuccess = () => {}, onError = () => {}, defaultValue = {} }) => {
   const { id } = useParams()
   const { onExec, abort } = useApiExec()
-  const [item, setItem] = useState({})
+  const [item, setItem] = useState(defaultValue)
   const endpoint = baseEndpoint + id + '/edit'
   let init = false
 
@@ -107,8 +107,8 @@ export const useEditItem = ({ baseEndpoint, onSuccess = () => {}, onError = () =
         endpoint: endpoint,
         status: 200,
         onSuccess: ({ data }) => {
-          setItem(data.payload.data)
           onSuccess(data)
+          setItem(data.payload.data)
         },
         onError: () => {
           onError()
@@ -124,7 +124,7 @@ export const useEditItem = ({ baseEndpoint, onSuccess = () => {}, onError = () =
     }
   }, [id])
 
-  return { item }
+  return { id, item }
 }
 
 export const useDeleteItem = ({ baseEndpoint }) => {
