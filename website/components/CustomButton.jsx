@@ -11,6 +11,7 @@ import { Button } from 'flowbite-react';
  * @param {...Object} props.props - Additional props to be passed down to the underlying Button component.
  * @return {JSX.Element} A customizable button component with optional icons and styling.
  */
+ 
 export default function CustomButton({ text, icon = null, iconBefore = false, className = '', ...props }) {
   return (
     <Button {...props} className={icon ? '[&>span]:flex [&>span]:items-center' + ' ' + className : '' + ' ' + className}>

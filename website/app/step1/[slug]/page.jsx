@@ -54,7 +54,6 @@ export default function ArticleDetailPage() {
           {article.updated_at && <div>更新日: {formatDate(article.updated_at)}</div>}
         </div>
       </div>
-
       {/* 記事本文 */}
       <article className="prose prose-lg max-w-none">
         {/* 記事の説明文（存在する場合） */}

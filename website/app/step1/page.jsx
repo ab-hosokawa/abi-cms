@@ -38,7 +38,7 @@ export default function Page() {
       minute: '2-digit',
     });
   }, []);
-
+  
   // ページ変更ハンドラー
   const handlePageChange = useCallback((pageNumber) => {
     setCurrentPage(pageNumber);
