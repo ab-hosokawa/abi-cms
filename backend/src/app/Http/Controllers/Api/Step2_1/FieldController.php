@@ -42,13 +42,12 @@ class FieldController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(Request $request)
+    public function store(Request $request, $model_id)
     {
         $validatedData = $request->validate([
             'title' => 'required|string',
             'display_name' => 'required|string',
             'type' => 'required|string',
-            'model_id' => 'required|exists:models,id',
         ]);
 
         try {
@@ -58,7 +57,7 @@ class FieldController extends Controller
             $model->title = $validatedData['title'];
             $model->display_name = $validatedData['display_name'];
             $model->type = $validatedData['type'];
-            $model->model_id = $validatedData['model_id'];
+            $model->model_id = $model_id;
 
             $model->save();
 
@@ -116,13 +115,12 @@ class FieldController extends Controller
      * @param $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $id, $model_id)
     {
         $validatedData = $request->validate([
             'title' => 'required|string',
             'display_name' => 'required|string',
             'type' => 'required|string',
-            'model_id' => 'required|exists:models,id',
         ]);
 
         try {
