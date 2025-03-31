@@ -7,7 +7,7 @@ export const useModel = () => {
   const { modelId } = useParams()
   const { onExec, abort } = useApiExec()
   const [modelData, setModelData] = useState({})
-  const endpoint = '/api/'
+  const endpoint = '/api/fe/step2/1/model/' + modelId + '/edit'
   let init = false
 
   useEffect(() => {
@@ -15,14 +15,14 @@ export const useModel = () => {
       onExec({
         endpoint,
         onError: () => {},
-        onAfter: () => {
-          setModelData(getMockDetail(modelId, mockModel))
+        onSuccess: ({ data }) => {
+          setModelData(data.payload.data)
         },
       })
     }
 
     return () => {
-      if (!init) {
+      if (init) {
         abort()
       }
       init = true

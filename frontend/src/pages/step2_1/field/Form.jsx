@@ -15,19 +15,19 @@ export const Form = () => {
 
   const formRef = useRef()
   const { navigateTo } = useNavigation()
-  const baseEndpoint = '/api/'
+  const baseEndpoint = '/api/fe/step2/1/' + modelId + '/field/'
   const formSettings = [
-    { formId: 'form-key', name: 'name', label: 'name' },
-    { formId: 'form-title', name: 'title', label: '表示名' },
+    { formId: 'form-key', name: 'title', label: 'タイトル' },
+    { formId: 'form-title', name: 'display_name', label: '表示名' },
     { formId: 'form-type', name: 'type', label: 'タイプ', type: 'select', choices: fieldTypes, placeholder: '選択してください' },
   ]
 
-  const { item } = useEditItem({ baseEndpoint, defaultValue: getMockDetail(id, mockField) })
+  const { item } = useEditItem({ baseEndpoint })
 
   const { isSaving, onSaving } = useRegisterItem({
     baseEndpoint: baseEndpoint,
-    onError: () => {},
-    onAfter: () => {
+    updatePath: '/update',
+    onSuccess: () => {
       navigateTo(`/step2_1/${modelId}/field/`)
     },
   })

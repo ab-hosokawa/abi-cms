@@ -13,19 +13,19 @@ import { mockField } from '../../../utils/mock.js'
 export const Index = () => {
   const { modelId, modelData } = useModel()
   const { navigateTo } = useNavigation()
-  const endpoint = '/api'
+  const endpoint = '/api/fe/step2/1/' + modelId + '/field'
   const [data, setData] = useState([])
 
   const { current, setCurrent, pages, fetchList } = useFetchItems({
     endpoint,
-    onAfter: () => {
-      setData(mockField)
+    onSuccess: ({ data }) => {
+      setData(data.payload.data)
     },
   })
 
   const columns = [
-    { key: 'name', label: 'name', _props: { style: { width: '30%' } } },
-    { key: 'title', label: '表示名', _props: { style: { width: '30%' } } },
+    { key: 'title', label: 'タイトル', _props: { style: { width: '30%' } } },
+    { key: 'display_name', label: '表示名', _props: { style: { width: '30%' } } },
     { key: 'type', label: 'タイプ', _props: { style: { width: '30%' } } },
     { key: 'actions', label: '', _props: { style: { width: '10%' } } },
   ]
@@ -63,7 +63,7 @@ export const Index = () => {
         </Button>
       </Heading>
       <ListTable columns={columns} scopedColumns={scopedColumns} items={data} />
-      <ListPagination current={current} pages={pages} onChgPage={() => {}} />
+      <ListPagination current={current} pages={pages} onChgPage={(page) => setCurrent(page)} />
     </>
   )
 }
