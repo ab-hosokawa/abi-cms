@@ -11,19 +11,16 @@ export const Form = () => {
   const { id } = useParams()
   const formRef = useRef()
   const { navigateTo } = useNavigation()
-  const baseEndpoint = '/api/'
+  const baseEndpoint = '/api/fe/step2/1/model/'
   const formSettings = [
     { formId: 'form-title', name: 'title', label: '名前' },
-    { formId: 'form-id', name: 'name', label: 'name' },
+    { formId: 'form-alias', name: 'alias', label: 'エイリアス' },
   ]
-  const { item } = useEditItem({
-    baseEndpoint,
-    defaultValue: getMockDetail(id, mockModel),
-  })
+  const { item } = useEditItem({ baseEndpoint })
   const { isSaving, onSaving } = useRegisterItem({
     baseEndpoint: baseEndpoint,
-    onError: () => {},
-    onAfter: () => {
+    updatePath: '/update',
+    onSuccess: () => {
       navigateTo('/step2_1/')
     },
   })

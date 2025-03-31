@@ -60,9 +60,16 @@ export const useFetchItems = ({
 /**
  * 記事登録
  */
-export const useRegisterItem = ({ baseEndpoint, onBefore = () => {}, onSuccess = () => {}, onError = () => {}, onAfter = () => {} }) => {
+export const useRegisterItem = ({
+  baseEndpoint,
+  onBefore = () => {},
+  onSuccess = () => {},
+  onError = () => {},
+  onAfter = () => {},
+  updatePath = '',
+}) => {
   const { id } = useParams()
-  const endpoint = id ? baseEndpoint + id + '' : baseEndpoint + 'store'
+  const endpoint = id ? baseEndpoint + id + updatePath : baseEndpoint + 'store'
   const method = id ? 'put' : 'post'
   const status = id ? 204 : 201
   const { onExec } = useApiExec()

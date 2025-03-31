@@ -8,14 +8,14 @@ import { ListPagination } from '../../utils/components/parts/ListPagination.jsx'
 
 export const Index = () => {
   const { navigateTo } = useNavigation()
-  const endpoint = '/api'
-  const [data, setData] = useState([
-    { id: 1, title: '新着情報' },
-    { id: 2, title: 'ブログ' },
-  ])
+  const endpoint = '/api/fe/step2/1/model'
+  const [data, setData] = useState([])
 
   const { current, setCurrent, pages, fetchList } = useFetchItems({
     endpoint: endpoint,
+    onSuccess: ({ data }) => {
+      setData(data.payload.data)
+    },
   })
 
   const columns = [
