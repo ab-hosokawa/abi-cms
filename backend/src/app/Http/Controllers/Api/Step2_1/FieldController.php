@@ -14,12 +14,12 @@ class FieldController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index(Request $request)
+    public function index(Request $request, $model_id)
     {
         $limit = $request->input('limit', 10);
         $current = $request->input('current', 1);
 
-        $posts = Field::paginate($limit, ['*'], 'page', $current);
+        $posts = Field::where('model_id', $model_id)->paginate($limit, ['*'], 'page', $current);
 
         return response()->json([
             'success' => true,
