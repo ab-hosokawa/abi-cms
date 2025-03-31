@@ -41,6 +41,26 @@ Route::prefix('/fe')->group(function() {
         Route::delete('/3/{id}', [Api\Step1_3\FrontendController::class, 'destroy']);
         Route::get('/3/{id}/edit', [Api\Step1_3\FrontendController::class, 'edit']);
     });
+
+    // STEP2
+    Route::prefix('/step2')->group(function() {
+        // 1
+        // model
+        Route::get('/1/model', [Api\Step2_1\ModelController::class, 'index']);
+        Route::post('/1/model/store', [Api\Step2_1\ModelController::class, 'store']);
+        Route::get('/1/model/{id}', [Api\Step2_1\ModelController::class, 'show']);
+        Route::put('/1/model/{id}/update', [Api\Step2_1\ModelController::class, 'update']);
+        Route::delete('/1/model/{id}/destroy', [Api\Step2_1\ModelController::class, 'destroy']);
+        Route::get('/1/model/{id}/edit', [Api\Step2_1\ModelController::class, 'edit']);
+        // field
+        Route::get('/1/{model_id}/field', [Api\Step2_1\FieldController::class, 'index']);
+        Route::post('/1/{model_id}/field/store', [Api\Step2_1\FieldController::class, 'store']);
+        Route::get('/1/{model_id}/field/{id}', [Api\Step2_1\FieldController::class, 'show']);
+        Route::put('/1/{model_id}/field/{id}/update', [Api\Step2_1\FieldController::class, 'update']);
+        Route::delete('/1/{model_id}/field/{id}/destroy', [Api\Step2_1\FieldController::class, 'destroy']);
+        Route::get('/1/{model_id}/field/{id}/edit', [Api\Step2_1\FieldController::class, 'edit']);
+
+    });
 });
 
 /** Website **/

@@ -1,12 +1,14 @@
 <?php
 
-namespace App\Http\Controllers\Api\Step_2_1;
+namespace App\Http\Controllers\Api\Step2_1;
 
 use App\Http\Controllers\Controller;
+use App\Models\Step2_1\Field;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
-class ModelController extends Controller
+class FieldController extends Controller
 {
     /** 一覧
      * @param Request $request
@@ -17,7 +19,7 @@ class ModelController extends Controller
         $limit = $request->input('limit', 10);
         $current = $request->input('current', 1);
 
-        $posts = Article::paginate($limit, ['*'], 'page', $current);
+        $posts = Field::paginate($limit, ['*'], 'page', $current);
 
         return response()->json([
             'success' => true,
@@ -31,6 +33,56 @@ class ModelController extends Controller
         ],200);
     }
 
+    public function create(Request $request)
+    {
+
+    }
+
+    /** 登録
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function store(Request $request)
+    {
+        try {
+            $validatedData = $request->validate([
+                'title' => 'required|string',
+                'display_name' => 'required|string',
+                'type' => 'required|string',
+                'model_id' => 'required|exists:models,id',
+            ]);
+
+            $model = new Field();
+
+            $model->title = $validatedData['title'];
+            $model->display_name = $validatedData['display_name'];
+            $model->type = $validatedData['type'];
+            $model->model_id = $validatedData['model_id'];
+
+            $model->save();
+
+            $result = [
+                'success' => true,
+                'timestamp' => now()->timestamp,
+                'payload' => [
+                    'id' => $model->id,
+                    'result' => true,
+                ]
+            ];
+
+            return response()->json($result,201);
+
+        } catch(ValidationException $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+            ], 422);
+        } catch(\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+            ],500);
+        }
+    }
+
     /** 編集
      * @param Request $request
      * @param $id
@@ -39,7 +91,7 @@ class ModelController extends Controller
     public function edit(Request $request, $id)
     {
         try {
-            $post = Article::findOrFail($id);
+            $post = Field::findOrFail($id);
 
             return response()->json([
                 'success' => true,
@@ -72,10 +124,12 @@ class ModelController extends Controller
         try {
             $validatedData = $request->validate([
                 'title' => 'required|string',
-                'body' => 'required|string',
+                'display_name' => 'required|string',
+                'type' => 'required|string',
+                'model_id' => 'required|exists:models,id',
             ]);
 
-            $post = Article::findOrFail($id);
+            $post = Field::findOrFail($id);
 
             $post->update($validatedData);
 
@@ -108,7 +162,7 @@ class ModelController extends Controller
     public function destroy(Request $request, $id)
     {
         try {
-            $post = Article::findOrFail($id);
+            $post = Field::findOrFail($id);
 
             $post->delete();
 
