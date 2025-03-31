@@ -11,10 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('field', function (Blueprint $table) {
+        Schema::create('fields', function (Blueprint $table) {
             $table->id();
             $table->string('title', 191)->nullable();
-            $table->text('alias')->nullable();
             $table->text('display_name')->nullable();
             $table->text('type')->nullable();
             $table->foreignId('model_id')->constrained()->onDelete('cascade');
@@ -27,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('field');
+        Schema::dropIfExists('fields');
     }
 };

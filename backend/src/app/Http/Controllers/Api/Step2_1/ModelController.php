@@ -44,11 +44,12 @@ class ModelController extends Controller
      */
     public function store(Request $request)
     {
+        $validatedData = $request->validate([
+            'title' => 'required|string',
+            'alias' => 'required|string',
+        ]);
+
         try {
-            $validatedData = $request->validate([
-                'title' => 'required|string',
-                'alias' => 'required|string',
-            ]);
 
             $model = new Model();
 
@@ -117,11 +118,12 @@ class ModelController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $validatedData = $request->validate([
+            'title' => 'required|string',
+            'alias' => 'required|string',
+        ]);
+
         try {
-            $validatedData = $request->validate([
-                'title' => 'required|string',
-                'alias' => 'required|string',
-            ]);
 
             $post = Model::findOrFail($id);
 

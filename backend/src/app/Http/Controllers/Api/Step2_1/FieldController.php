@@ -44,13 +44,14 @@ class FieldController extends Controller
      */
     public function store(Request $request)
     {
+        $validatedData = $request->validate([
+            'title' => 'required|string',
+            'display_name' => 'required|string',
+            'type' => 'required|string',
+            'model_id' => 'required|exists:models,id',
+        ]);
+
         try {
-            $validatedData = $request->validate([
-                'title' => 'required|string',
-                'display_name' => 'required|string',
-                'type' => 'required|string',
-                'model_id' => 'required|exists:models,id',
-            ]);
 
             $model = new Field();
 
@@ -72,10 +73,6 @@ class FieldController extends Controller
 
             return response()->json($result,201);
 
-        } catch(ValidationException $e) {
-            return response()->json([
-                'message' => $e->getMessage(),
-            ], 422);
         } catch(\Exception $e) {
             return response()->json([
                 'message' => $e->getMessage(),
@@ -121,13 +118,14 @@ class FieldController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $validatedData = $request->validate([
+            'title' => 'required|string',
+            'display_name' => 'required|string',
+            'type' => 'required|string',
+            'model_id' => 'required|exists:models,id',
+        ]);
+
         try {
-            $validatedData = $request->validate([
-                'title' => 'required|string',
-                'display_name' => 'required|string',
-                'type' => 'required|string',
-                'model_id' => 'required|exists:models,id',
-            ]);
 
             $post = Field::findOrFail($id);
 
