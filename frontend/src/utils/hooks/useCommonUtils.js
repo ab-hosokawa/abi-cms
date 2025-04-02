@@ -16,6 +16,7 @@ export const useFetchItems = ({
   onSuccess = null,
   onError = null,
   onAfter = null,
+  isUseEffect = true,
 } = {}) => {
   let init = false
   const { onExec, abort } = useApiExec()
@@ -24,7 +25,7 @@ export const useFetchItems = ({
   const [limit, setLimit] = useState(null)
 
   useEffect(() => {
-    if (!init) {
+    if (!init && isUseEffect) {
       fetchList()
     }
 

@@ -19,8 +19,8 @@ export const Index = () => {
   })
 
   const columns = [
-    { key: 'title', label: 'モデル名', _props: { style: { width: '80%' } } },
-    { key: 'actions', label: '', _props: { style: { width: '20%' } } },
+    { key: 'title', label: 'モデル名', _props: { style: { width: '70%' } } },
+    { key: 'actions', label: '', _props: { style: { width: '30%' } } },
   ]
 
   const scopedColumns = {
@@ -46,6 +46,15 @@ export const Index = () => {
                 }}
               >
                 フィールド編集
+              </Button>
+              <Button
+                size={'sm'}
+                variant={'outline-secondary'}
+                onClick={() => {
+                  navigateTo(`/step2_2/${item.id}/content/`)
+                }}
+              >
+                記事登録
               </Button>
             </ButtonGroup>
           </ButtonGroup>

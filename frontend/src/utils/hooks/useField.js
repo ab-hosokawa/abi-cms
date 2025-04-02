@@ -1,12 +1,12 @@
+import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useApiExec } from './useApi.js'
-import { useEffect, useState } from 'react'
 
-export const useModel = () => {
+export const useField = () => {
   const { modelId } = useParams()
   const { onExec, abort } = useApiExec()
-  const [modelData, setModelData] = useState({})
-  const endpoint = '/api/fe/step2/1/model/' + modelId + '/edit'
+  const [fields, setFields] = useState([])
+  const endpoint = '/api/fe/step2/1/' + modelId + '/field'
   let init = false
 
   useEffect(() => {
@@ -15,7 +15,7 @@ export const useModel = () => {
         endpoint,
         onError: () => {},
         onSuccess: ({ data }) => {
-          setModelData(data.payload.data)
+          setFields(data.payload.data)
         },
       })
     }
@@ -28,5 +28,5 @@ export const useModel = () => {
     }
   }, [modelId])
 
-  return { modelId, modelData }
+  return { fields }
 }
