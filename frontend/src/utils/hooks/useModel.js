@@ -30,3 +30,26 @@ export const useModel = () => {
 
   return { modelId, modelData }
 }
+
+export const useFindModel = () => {
+  const { onExec, abort } = useApiExec()
+  let init = false
+
+  useEffect(() => {
+    return () => {
+      if (init) {
+        abort()
+      }
+      init = true
+    }
+  }, [])
+
+  const fetch = (params = {}) => {
+    onExec({
+      endpoint: '/api/fe/step2/1/model',
+      ...params,
+    })
+  }
+
+  return { fetch }
+}

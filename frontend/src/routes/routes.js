@@ -35,7 +35,7 @@ export const routes = [
   { path: '/step2_1/:modelId/field/new/', element: Step2_1_Field_Form, name: 'Step2-1', menu: false },
   { path: '/step2_1/:modelId/field/:id/', element: Step2_1_Field_Form, name: 'Step2-1', menu: false },
   // step2_1
-  { path: '/step2_2/:modelId/content/', element: Step2_2_Index, name: 'Step2-2', menu: false },
-  { path: '/step2_2/:modelId/content/new/', element: Step2_2_Form, name: 'Step2-2', menu: false },
-  { path: '/step2_2/:modelId/content/:id/', element: Step2_2_Form, name: 'Step2-2', menu: false },
+  { path: '/step2_2/', element: Step2_2_Index, name: 'Step2-2', menu: true },
+  { path: '/step2_2/new/', element: Step2_2_Form, name: 'Step2-2', menu: false },
+  { path: '/step2_2/:id/', element: Step2_2_Form, name: 'Step2-2', menu: false },
 ]

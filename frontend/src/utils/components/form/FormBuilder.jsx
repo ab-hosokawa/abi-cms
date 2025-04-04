@@ -29,6 +29,9 @@ export const FormBuilder = React.forwardRef(({ formSettings = [], onSave = () =>
               <FormGroup
                 onChange={(val, e) => {
                   inputRef.current[setting.name] = val
+                  if (typeof setting.onChangeCustom !== 'undefined') {
+                    setting.onChangeCustom(val, e)
+                  }
                 }}
                 defaultValue={defaultValue?.[setting.name]}
                 {...setting}
