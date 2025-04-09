@@ -59,8 +59,23 @@ Route::prefix('/fe')->group(function() {
         Route::put('/1/{model_id}/field/{id}/update', [Api\Step2_1\FieldController::class, 'update']);
         Route::delete('/1/{model_id}/field/{id}/destroy', [Api\Step2_1\FieldController::class, 'destroy']);
         Route::get('/1/{model_id}/field/{id}/edit', [Api\Step2_1\FieldController::class, 'edit']);
+        // 2
+        // content
+        Route::get('/2/content', [Api\Step2_2\ContentController::class, 'index']);
+        Route::post('/2/content/store', [Api\Step2_2\ContentController::class, 'store']);
+        Route::get('/2/content/{id}', [Api\Step2_2\ContentController::class, 'show']);
+        Route::put('/2/content/{id}/update', [Api\Step2_2\ContentController::class, 'update']);
+        Route::delete('/2/content/{id}/destroy', [Api\Step2_2\ContentController::class, 'destroy']);
+        Route::get('/2/content/{id}/edit', [Api\Step2_2\ContentController::class, 'edit']);
+
+        // 全件取得
+        Route::get('/2/model/posts', [Api\Step2_2\ModelController::class, 'posts']);
+        Route::get('/2/field/posts', [Api\Step2_2\FieldController::class, 'posts']);
+        Route::get('/2/content_field/posts', [Api\Step2_2\ContentController::class, 'contentFieldPosts']);
 
     });
+
+
 });
 
 /** Website **/

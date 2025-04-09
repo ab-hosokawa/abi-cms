@@ -183,4 +183,8 @@ class ModelController extends Controller
         }
     }
 
+    public function posts()
+    {
+        return Model::all();
+    }
 }

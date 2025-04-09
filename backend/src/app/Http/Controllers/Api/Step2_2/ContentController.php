@@ -4,9 +4,12 @@ namespace app\Http\Controllers\Api\Step2_2;
 
 use App\Http\Controllers\Controller;
 use App\Models\Step2_1\Content;
+use App\Models\Step2_1\ContentField;
+use App\Models\Step2_1\Field;
 use App\Models\Step2_1\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
 class ContentController extends Controller
@@ -15,12 +18,12 @@ class ContentController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index(Request $request, $model_id)
+    public function index(Request $request)
     {
         $limit = $request->input('limit', 10);
         $current = $request->input('current', 1);
 
-        $posts = Content::where('model_id', $model_id)->paginate($limit, ['*'], 'page', $current);
+        $posts = Content::paginate($limit, ['*'], 'page', $current);
 
         return response()->json([
             'success' => true,
@@ -34,68 +37,59 @@ class ContentController extends Controller
         ],200);
     }
 
-    public function create(Request $request, $model_id)
+    public function create(Request $request)
     {
-        try {
-            $model = Model::findOrFail($model_id);
-
-            return response()->json([
-                'success' => true,
-                'timestamp' => now()->timestamp,
-                'payload' => [
-                    'model' => $model,
-                ]
-            ],200);
-
-        } catch(ModelNotFoundException $e) {
-
-            return response()->json([
-                'message' => $e->getMessage(),
-            ],404);
-        } catch(\Exception $e) {
-
-            return response()->json([
-                'message' => $e->getMessage(),
-            ],500);
-
-        }
     }
 
     /** 登録
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(Request $request, $model_id)
+    public function store(Request $request)
     {
-        $validatedData = $request->validate([
-            'title' => 'required|string',
-            'display_name' => 'required|string',
-            'type' => 'required|string',
-        ]);
+        // モデルのID
+        $model_id = $request->input('model_id');
+        // フィールド
+        $request_fields = $request->input('fields');
+
+        $data = [];
 
         try {
+            DB::beginTransaction();
 
-//            $model = new Field();
-//
-//            $model->title = $validatedData['title'];
-//            $model->display_name = $validatedData['display_name'];
-//            $model->type = $validatedData['type'];
-//            $model->model_id = $model_id;
-//
-//            $model->save();
-//
+            $contentModel = new Content();
+            $contentModel->model_id = $model_id;
+            $contentModel->save();
+
+            foreach($request_fields as $key => $value) {
+                $data[] = [
+                    'field_id' => $value['id'],
+                    'content_id' => $contentModel->id,
+                    'value' => $value['value']
+            ];
+        }
+
+            $contentFieldModel = new ContentField();
+            $tableName = $contentFieldModel->getTable();
+
+            DB::table($tableName)->insert($data);
+
             $result = [
                 'success' => true,
                 'timestamp' => now()->timestamp,
                 'payload' => [
-                    'id' => $model->id,
+                    'id' => $contentModel->id,
                     'result' => true,
                 ]
             ];
 
+            DB::commit();
+
             return response()->json($result,201);
 
         } catch(\Exception $e) {
+            DB::rollBack();
+
             return response()->json([
                 'message' => $e->getMessage(),
             ],500);
@@ -138,7 +132,7 @@ class ContentController extends Controller
      * @param $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, $id, $model_id)
+    public function update(Request $request, $id)
     {
         $validatedData = $request->validate([
             'title' => 'required|string',
@@ -206,4 +200,8 @@ class ContentController extends Controller
         }
     }
 
+    public function contentFieldPosts()
+    {
+        return ContentField::all();
+    }
 }

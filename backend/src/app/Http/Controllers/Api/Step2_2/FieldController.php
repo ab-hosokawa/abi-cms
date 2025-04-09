@@ -183,4 +183,9 @@ class FieldController extends Controller
         }
     }
 
+    public function posts()
+    {
+        return Field::all();
+    }
+
 }
