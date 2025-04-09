@@ -34,6 +34,8 @@ export const useField = () => {
 export const useFindField = () => {
   const { onExec, abort } = useApiExec()
 
+  const findAll = () => {}
+
   const findByModel = (modelId, params = {}) => {
     onExec({
       endpoint: '/api/fe/step2/1/' + modelId + '/field',

@@ -30,12 +30,15 @@ export const Index = () => {
   })
 
   const columns = [
-    { key: 'title', label: '見出し', _props: { style: { width: '50%' } } },
+    { key: 'header', label: '見出し', _props: { style: { width: '50%' } } },
     { key: 'model', label: 'モデル', _props: { style: { width: '35%' } } },
     { key: 'actions', label: '', _props: { style: { width: '15%' } } },
   ]
 
   const scopedColumns = {
+    header: (item) => {
+      return <td>{item.title}</td>
+    },
     model: (item) => {
       return <td>{getArrayToText(modelList, item.model_id, 'id', 'title')}</td>
     },

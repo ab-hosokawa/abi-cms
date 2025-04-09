@@ -25,16 +25,24 @@ export const FormBuilder = React.forwardRef(({ formSettings = [], onSave = () =>
       <Form>
         {React.Children.toArray(
           formSettings.map((setting) => {
+            const { onChangeCustom = null, setDefaultValue = null, ...rest } = setting
             return (
               <FormGroup
                 onChange={(val, e) => {
-                  inputRef.current[setting.name] = val
-                  if (typeof setting.onChangeCustom !== 'undefined') {
-                    setting.onChangeCustom(val, e)
+                  if (onChangeCustom) {
+                    onChangeCustom(inputRef.current, val, e)
+                  } else {
+                    inputRef.current[setting.name] = val
                   }
                 }}
-                defaultValue={defaultValue?.[setting.name]}
-                {...setting}
+                defaultValue={(() => {
+                  if (setDefaultValue) {
+                    return setDefaultValue()
+                  } else {
+                    return defaultValue?.[setting.name]
+                  }
+                })()}
+                {...rest}
               />
             )
           })

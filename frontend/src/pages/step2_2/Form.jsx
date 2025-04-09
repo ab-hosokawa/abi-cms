@@ -17,7 +17,7 @@ export const Form = () => {
   let baseFormSettings = []
   let init = false
 
-  const { item } = useEditItem({ baseEndpoint })
+  const { id, item } = useEditItem({ baseEndpoint })
   const { isSaving, onSaving } = useRegisterItem({
     baseEndpoint: baseEndpoint,
     updatePath: '/update',
@@ -44,8 +44,8 @@ export const Form = () => {
             type: 'select',
             choices: models,
             placeholder: '選択してください',
-            onChangeCustom: (val) => {
-              handleChangeModel(val)
+            onChangeCustom: (inputVals, val) => {
+              handleChangeModel(inputVals, val)
             },
           })
           setFormSettings(baseFormSettings)
@@ -59,13 +59,36 @@ export const Form = () => {
   }, [])
 
   // モデル変更
-  const handleChangeModel = (val) => {
+  const handleChangeModel = (inputVals, val) => {
+    inputVals['model_id'] = val
     if (val !== '') {
       findByModel(val, {
         onSuccess: ({ data }) => {
           let newSettings = [...baseFormSettings]
-          data?.payload?.data.map((item) => {
-            newSettings.push({ formId: `form-${item.display_name}`, name: item.display_name, label: item.title, type: item.type })
+          data?.payload?.data.map((model) => {
+            const { display_name, title, type } = model
+            newSettings.push({
+              formId: `form-${display_name}`,
+              name: display_name,
+              label: title,
+              type: type,
+              setDefaultValue: () => {
+                if (id) {
+                  return item?.fields?.[display_name].value
+                } else {
+                  return ''
+                }
+              },
+              onChangeCustom: (inputVals, val) => {
+                if (typeof inputVals['fields'] === 'undefined') {
+                  inputVals['fields'] = {}
+                }
+                inputVals['fields'][display_name] = {
+                  id: model.id,
+                  value: val,
+                }
+              },
+            })
           })
           setFormSettings(newSettings)
         },
