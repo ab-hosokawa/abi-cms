@@ -57,10 +57,13 @@ class ContentController extends Controller
         try {
             DB::beginTransaction();
 
+            //// Contentの保存
             $contentModel = new Content();
             $contentModel->model_id = $model_id;
             $contentModel->save();
+            //// ここまで
 
+            //// ContentFieldの保存
             foreach($request_fields as $key => $value) {
                 $data[] = [
                     'field_id' => $value['id'],
@@ -73,6 +76,7 @@ class ContentController extends Controller
             $tableName = $contentFieldModel->getTable();
 
             DB::table($tableName)->insert($data);
+            //// ここまで
 
             $result = [
                 'success' => true,
@@ -103,14 +107,30 @@ class ContentController extends Controller
      */
     public function edit(Request $request, $id)
     {
+        $fields = [];
         try {
-            $post = Field::findOrFail($id);
+            $post = Content::findOrFail($id);
+
+            $contentFields = ContentField::where('content_id', $post->id)->get();
+
+            foreach($contentFields as $contentField) {
+                $field = FIeld::findOrFail($contentField->field_id);
+                $fields[$field->title] = [
+                    'id' => $field->id,
+                    'value' => $contentField->value
+                ];
+            }
+
+            $data = [
+                'model_id' => $post->model_id,
+                'fields' => $fields
+            ];
 
             return response()->json([
                 'success' => true,
                 'timestamp' => now()->timestamp,
                 'payload' => [
-                    'data' => $post,
+                    'data' => $data,
                 ]
             ],200);
 
@@ -134,25 +154,54 @@ class ContentController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $validatedData = $request->validate([
-            'title' => 'required|string',
-            'display_name' => 'required|string',
-            'type' => 'required|string',
-        ]);
+        // モデルのID
+        $model_id = $request->input('model_id');
+        // フィールド
+        $request_fields = $request->input('fields');
+
+        $fields = [];
 
         try {
 
-            $post = Field::findOrFail($id);
+            $post = Content::findOrFail($id);
 
-            $post->update($validatedData);
+            DB::beginTransaction();
+
+            //// Contentの保存
+            $post->model_id = $model_id;
+            $post->update(['model_id' => $model_id]);
+            //// ここまで
+
+            //// ContentFieldの保存
+            foreach($request_fields as $key => $value) {
+                $contentField = ContentField::where('content_id', $id)
+                    ->where('field_id', $value['id'])->first();
+
+                $contentField->update(['value' => $value['value']]);
+
+                $fields[$key] = [
+                    'id' => $value['id'],
+                    'value' => $value['value'],
+                ];
+            }
+
+            //// ここまで
+
+            $data = [
+                'model_id' => $model_id,
+                'fields' => $fields,
+            ];
+
+            DB::commit();
 
             return response()->json([
                 'success' => true,
                 'timestamp' => now()->timestamp,
                 'payload' => [
-                    'data' => $post,
+                    'data' => $data,
+                    'result' => true,
                 ]
-            ], 204);
+            ],204);
 
         } catch(ModelNotFoundException $e) {
             return response()->json([
@@ -160,10 +209,11 @@ class ContentController extends Controller
             ],404);
 
         } catch(\Exception $e) {
+            DB::rollBack();
+
             return response()->json([
                 'message' => $e->getMessage(),
             ],500);
-
         }
     }
 
@@ -175,7 +225,7 @@ class ContentController extends Controller
     public function destroy(Request $request, $id)
     {
         try {
-            $post = Field::findOrFail($id);
+            $post = Content::findOrFail($id);
 
             $post->delete();
 
@@ -198,6 +248,11 @@ class ContentController extends Controller
             ],500);
 
         }
+    }
+
+    public function contentPosts()
+    {
+        return Content::all();
     }
 
     public function contentFieldPosts()

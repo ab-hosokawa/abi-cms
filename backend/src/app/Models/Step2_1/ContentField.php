@@ -7,6 +7,7 @@ use App\Models\Step2_1\Model;
 
 class ContentField extends EloquentModel
 {
+    protected $fillable = ['content_id', 'value'];
 
     public function content()
     {

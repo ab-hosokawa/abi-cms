@@ -71,6 +71,7 @@ Route::prefix('/fe')->group(function() {
         // 全件取得
         Route::get('/2/model/posts', [Api\Step2_2\ModelController::class, 'posts']);
         Route::get('/2/field/posts', [Api\Step2_2\FieldController::class, 'posts']);
+        Route::get('/2/content/posts', [Api\Step2_2\ContentController::class, 'contentPosts']);
         Route::get('/2/content_field/posts', [Api\Step2_2\ContentController::class, 'contentFieldPosts']);
 
     });
