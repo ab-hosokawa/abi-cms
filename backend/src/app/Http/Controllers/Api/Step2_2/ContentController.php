@@ -22,7 +22,29 @@ class ContentController extends Controller
         $limit = $request->input('limit', 10);
         $current = $request->input('current', 1);
 
+        $data = [];
         $posts = Content::paginate($limit, ['*'], 'page', $current);
+
+        foreach($posts as $post) {
+            $contentFields = ContentField::where('content_id', $post->id)->get();
+
+            foreach($contentFields as $contentField) {
+                $field = FIeld::findOrFail($contentField->field_id);
+                $fields[$field->title] = [
+                    'id' => $field->id,
+                    'value' => $contentField->value
+                ];
+            }
+
+            $data = [
+                'id' => $post->id,
+                'model_id' => $post->model_id,
+                'fields' => $fields,
+                'created_at' => $post->created_at,
+                'updated_at' => $post->updated_at,
+            ];
+
+        }
 
         return response()->json([
             'success' => true,
@@ -31,7 +53,7 @@ class ContentController extends Controller
                 'total' => $posts->total(),
                 'current' => $posts->currentPage(),
                 'pages' => $posts->lastPage(),
-                'data' => $posts->items(),
+                'data' => $data,
             ]
         ],200);
     }
