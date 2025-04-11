@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Step2_1\Content;
 use App\Models\Step2_1\ContentField;
 use App\Models\Step2_1\Field;
-use App\Models\Step2_1\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -122,8 +121,11 @@ class ContentController extends Controller
             }
 
             $data = [
+                'id' => $post->id,
                 'model_id' => $post->model_id,
-                'fields' => $fields
+                'fields' => $fields,
+                'created_at' => $post->created_at,
+                'updated_at' => $post->updated_at,
             ];
 
             return response()->json([

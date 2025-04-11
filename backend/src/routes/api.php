@@ -63,7 +63,7 @@ Route::prefix('/fe')->group(function() {
         // content
         Route::get('/2/content', [Api\Step2_2\ContentController::class, 'index']);
         Route::post('/2/content/store', [Api\Step2_2\ContentController::class, 'store']);
-        Route::get('/2/content/{id}', [Api\Step2_2\ContentController::class, 'show']);
+        Route::get('/2/content/{id}show', [Api\Step2_2\ContentController::class, 'show']);
         Route::put('/2/content/{id}/update', [Api\Step2_2\ContentController::class, 'update']);
         Route::delete('/2/content/{id}/destroy', [Api\Step2_2\ContentController::class, 'destroy']);
         Route::get('/2/content/{id}/edit', [Api\Step2_2\ContentController::class, 'edit']);
@@ -90,5 +90,11 @@ Route::prefix('/web')->group(function() {
         Route::get('/2/{id}', [Api\Step1_2\WebsiteController::class, 'show']);
         // 3
         Route::get('/3', [Api\Step1_3\WebsiteController::class, 'index']);
+    });
+    // STEP2
+    Route::prefix('/step2')->group(function() {
+        // 2
+        Route::get('/2/{alias}', [Api\Step2_2\WebsiteController::class, 'index']);
+        Route::get('/2/{alias}/{id}', [Api\Step2_2\WebsiteController::class, 'show']);
     });
 });
