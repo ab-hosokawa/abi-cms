@@ -102,7 +102,7 @@ export const useRegisterItem = ({
   return { id, isSaving, onSaving }
 }
 
-export const useEditItem = ({ baseEndpoint, onSuccess = () => {}, onError = () => {}, defaultValue = {} }) => {
+export const useEditItem = ({ baseEndpoint, onSuccess = () => {}, onError = () => {}, defaultValue = {}, isUseEffect = true }) => {
   const { id } = useParams()
   const { onExec, abort } = useApiExec()
   const [item, setItem] = useState(defaultValue)
@@ -110,18 +110,8 @@ export const useEditItem = ({ baseEndpoint, onSuccess = () => {}, onError = () =
   let init = false
 
   useEffect(() => {
-    if (id && !init) {
-      onExec({
-        endpoint: endpoint,
-        status: 200,
-        onSuccess: ({ data }) => {
-          onSuccess(data)
-          setItem(data.payload.data)
-        },
-        onError: () => {
-          onError()
-        },
-      })
+    if (id && isUseEffect && !init) {
+      findItem()
     }
 
     return () => {
@@ -132,15 +122,32 @@ export const useEditItem = ({ baseEndpoint, onSuccess = () => {}, onError = () =
     }
   }, [id])
 
-  return { id, item }
+  const findItem = (callback = null) => {
+    onExec({
+      endpoint: endpoint,
+      status: 200,
+      onSuccess: ({ data }) => {
+        onSuccess(data)
+        setItem(data.payload.data)
+        if (callback) {
+          callback(data)
+        }
+      },
+      onError: () => {
+        onError()
+      },
+    })
+  }
+
+  return { id, item, findItem }
 }
 
-export const useDeleteItem = ({ baseEndpoint }) => {
+export const useDeleteItem = ({ baseEndpoint, deletePath = '' }) => {
   const { onExec } = useApiExec()
 
   const confirmDelete = (id, onSuccess = () => {}) => {
     if (window.confirm('削除しますか？')) {
-      const endpoint = baseEndpoint + id
+      const endpoint = baseEndpoint + id + deletePath
       onExec({
         endpoint: endpoint,
         status: 204,

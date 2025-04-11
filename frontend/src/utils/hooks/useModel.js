@@ -46,7 +46,7 @@ export const useFindModel = () => {
 
   const fetch = (params = {}) => {
     onExec({
-      endpoint: '/api/fe/step2/1/model',
+      endpoint: '/api/fe/step2/2/model/posts',
       ...params,
     })
   }

@@ -1,26 +1,22 @@
 import React, { useEffect, useState } from 'react'
 import { useFindModel, useModel } from '../../utils/hooks/useModel.js'
 import { useNavigation } from '../../utils/hooks/useNavigation.js'
-import { useFetchItems } from '../../utils/hooks/useCommonUtils.js'
-import { Button } from 'react-bootstrap'
+import { useDeleteItem, useFetchItems } from '../../utils/hooks/useCommonUtils.js'
+import { Button, ButtonGroup } from 'react-bootstrap'
 import { Heading } from '../../utils/components/parts/Heading.jsx'
 import { ListTable } from '../../utils/components/parts/ListTable.jsx'
 import { ListPagination } from '../../utils/components/parts/ListPagination.jsx'
-import { useField } from '../../utils/hooks/useField.js'
+import { useField, useFindField } from '../../utils/hooks/useField.js'
 import { getArrayToText } from '../../utils/common.js'
 
 export const Index = () => {
-  const endpoint = '/api/fe/step2/2'
+  const endpoint = '/api/fe/step2/2/content'
   const { navigateTo } = useNavigation()
 
   const model = useFindModel()
   const [modelList, setModelList] = useState([])
 
-  const [data, setData] = useState([
-    { id: 1, title: 'タイトル1', comment: 'コメント1', model_id: 1 },
-    { id: 2, title: 'タイトル2', comment: 'コメント2', model_id: 2 },
-    { id: 3, title: 'タイトル3', comment: 'コメント3', model_id: 1 },
-  ])
+  const [data, setData] = useState([])
 
   const { current, setCurrent, pages, fetchList } = useFetchItems({
     endpoint,
@@ -28,6 +24,7 @@ export const Index = () => {
       setData(data.payload.data)
     },
   })
+  const { confirmDelete } = useDeleteItem({ baseEndpoint: endpoint + '/', deletePath: '/destroy' })
 
   const columns = [
     { key: 'header', label: '見出し', _props: { style: { width: '50%' } } },
@@ -37,7 +34,7 @@ export const Index = () => {
 
   const scopedColumns = {
     header: (item) => {
-      return <td>{item.title}</td>
+      return <td>{item?.fields[0]?.value}</td>
     },
     model: (item) => {
       return <td>{getArrayToText(modelList, item.model_id, 'id', 'title')}</td>
@@ -45,26 +42,47 @@ export const Index = () => {
     actions: (item) => {
       return (
         <td className={'text-center'}>
-          <Button
-            onClick={() => {
-              navigateTo(`/step2_2/${item.id}/`)
-            }}
-            variant={'outline-primary'}
-            size={'sm'}
-          >
-            編集
-          </Button>
+          <ButtonGroup>
+            <Button
+              onClick={() => {
+                navigateTo(`/step2_2/${item.id}/`)
+              }}
+              variant={'outline-primary'}
+              size={'sm'}
+            >
+              編集
+            </Button>
+            <Button
+              size={'sm'}
+              variant={'outline-danger'}
+              onClick={() => {
+                confirmDelete(item.id, () => {
+                  fetchList()
+                })
+              }}
+            >
+              削除
+            </Button>
+          </ButtonGroup>
         </td>
       )
     },
   }
 
   useEffect(() => {
-    model.fetch({
-      onSuccess: ({ data }) => {
-        setModelList(data.payload.data)
-      },
-    })
+    Promise.all([
+      new Promise((resolve) => {
+        // モデルの取得
+        model.fetch({
+          onSuccess: ({ data }) => {
+            setModelList(data)
+          },
+          onAfter: () => {
+            resolve()
+          },
+        })
+      }),
+    ]).then(() => {})
   }, [])
 
   return (
