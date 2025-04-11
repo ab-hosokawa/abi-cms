@@ -30,7 +30,7 @@ class ContentController extends Controller
 
             foreach($contentFields as $contentField) {
                 $field = FIeld::findOrFail($contentField->field_id);
-                $fields[$field->title] = [
+                $fields[] = [
                     'id' => $field->id,
                     'value' => $contentField->value
                 ];
