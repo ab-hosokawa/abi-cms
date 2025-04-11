@@ -36,7 +36,7 @@ class ContentController extends Controller
                 ];
             }
 
-            $data = [
+            $data[] = [
                 'id' => $post->id,
                 'model_id' => $post->model_id,
                 'fields' => $fields,
