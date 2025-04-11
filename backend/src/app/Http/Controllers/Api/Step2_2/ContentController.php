@@ -28,6 +28,7 @@ class ContentController extends Controller
         foreach($posts as $post) {
             $contentFields = ContentField::where('content_id', $post->id)->get();
 
+            $fields = [];
             foreach($contentFields as $contentField) {
                 $field = FIeld::findOrFail($contentField->field_id);
                 $fields[] = [
