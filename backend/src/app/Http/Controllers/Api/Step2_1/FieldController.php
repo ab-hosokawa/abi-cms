@@ -84,7 +84,7 @@ class FieldController extends Controller
      * @param $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function edit(Request $request, $id)
+    public function edit(Request $request, $model_id, $id)
     {
         try {
             $post = Field::findOrFail($id);
@@ -115,7 +115,7 @@ class FieldController extends Controller
      * @param $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, $id, $model_id)
+    public function update(Request $request, $model_id,  $id)
     {
         $validatedData = $request->validate([
             'title' => 'required|string',

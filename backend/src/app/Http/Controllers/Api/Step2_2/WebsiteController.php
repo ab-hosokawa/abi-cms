@@ -28,11 +28,14 @@ class WebsiteController extends Controller
             foreach ($posts as $post) {
                 $fields = [];
                 $contentFields = ContentField::where('content_id', $post->id)->get();
+                $fields['id'] = $post->id;
                 foreach ($contentFields as $contentField) {
                     $field = Field::where('id', $contentField->field_id)->first();
-                    $fields['id'] = $post->id;
-                    $fields[$field->title] = $contentField->value;
+                    $fields['field.' . $field->title] = $contentField->value;
                 }
+                $fields['created_at'] = $post->created_at;
+                $fields['updated_at'] = $post->created_at;
+
                 $contents[] = $fields;
             }
 
@@ -73,11 +76,13 @@ class WebsiteController extends Controller
 
             // 記事データ 整形
             $contentFields = ContentField::where('content_id', $post->id)->get();
+            $contents['id'] = $post->id;
             foreach ($contentFields as $contentField) {
                 $field = Field::where('id', $contentField->field_id)->first();
-                $contents['id'] = $post->id;
-                $contents[$field->title] = $contentField->value;
+                $contents['field.' . $field->title] = $contentField->value;
             }
+            $contents['created_at'] = $post->created_at;
+            $contents['updated_at'] = $post->created_at;
 
             return response()->json([
                 'success' => true,
