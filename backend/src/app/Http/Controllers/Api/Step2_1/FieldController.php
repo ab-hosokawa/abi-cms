@@ -155,7 +155,7 @@ class FieldController extends Controller
      * @param $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy(Request $request, $id)
+    public function destroy(Request $request, $model_id, $id)
     {
         try {
             $post = Field::findOrFail($id);

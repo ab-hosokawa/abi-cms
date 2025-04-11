@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import { useModel } from '../../../utils/hooks/useModel.js'
 import { Heading } from '../../../utils/components/parts/Heading'
-import { Button } from 'react-bootstrap'
+import { Button, ButtonGroup } from 'react-bootstrap'
 import { useNavigation } from '../../../utils/hooks/useNavigation.js'
-import { useFetchItems } from '../../../utils/hooks/useCommonUtils.js'
+import { useDeleteItem, useFetchItems } from '../../../utils/hooks/useCommonUtils.js'
 import { ListTable } from '../../../utils/components/parts/ListTable'
 import { ListPagination } from '../../../utils/components/parts/ListPagination'
 import { fieldTypes } from '../../../utils/const.js'
@@ -22,10 +22,11 @@ export const Index = () => {
       setData(data.payload.data)
     },
   })
+  const { confirmDelete } = useDeleteItem({ baseEndpoint: endpoint + '/', deletePath: '/destroy' })
 
   const columns = [
-    { key: 'title', label: 'タイトル', _props: { style: { width: '30%' } } },
     { key: 'display_name', label: '表示名', _props: { style: { width: '30%' } } },
+    { key: 'title', label: 'キー名', _props: { style: { width: '30%' } } },
     { key: 'type', label: 'タイプ', _props: { style: { width: '30%' } } },
     { key: 'actions', label: '', _props: { style: { width: '10%' } } },
   ]
@@ -37,15 +38,28 @@ export const Index = () => {
     actions: (item) => {
       return (
         <td className={'text-center'}>
-          <Button
-            onClick={() => {
-              navigateTo(`/step2_1/${modelId}/field/${item.id}/`)
-            }}
-            variant={'outline-primary'}
-            size={'sm'}
-          >
-            編集
-          </Button>
+          <ButtonGroup>
+            <Button
+              onClick={() => {
+                navigateTo(`/step2_1/${modelId}/field/${item.id}/`)
+              }}
+              variant={'outline-primary'}
+              size={'sm'}
+            >
+              編集
+            </Button>
+            <Button
+              size={'sm'}
+              variant={'outline-danger'}
+              onClick={() => {
+                confirmDelete(item.id, () => {
+                  fetchList()
+                })
+              }}
+            >
+              削除
+            </Button>
+          </ButtonGroup>
         </td>
       )
     },

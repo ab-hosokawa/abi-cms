@@ -17,12 +17,12 @@ export const Form = () => {
   const { navigateTo } = useNavigation()
   const baseEndpoint = '/api/fe/step2/1/' + modelId + '/field/'
   const formSettings = [
-    { formId: 'form-key', name: 'title', label: 'タイトル' },
     { formId: 'form-title', name: 'display_name', label: '表示名' },
+    { formId: 'form-key', name: 'title', label: 'キー名' },
     { formId: 'form-type', name: 'type', label: 'タイプ', type: 'select', choices: fieldTypes, placeholder: '選択してください' },
   ]
 
-  const { item } = useEditItem({ baseEndpoint })
+  const { item, isLoad } = useEditItem({ baseEndpoint })
 
   const { isSaving, onSaving } = useRegisterItem({
     baseEndpoint: baseEndpoint,
@@ -35,16 +35,20 @@ export const Form = () => {
   return (
     <>
       <Heading title={`STEP2-1 ${modelData.title} フィールド登録`} />
-      <FormBuilder formSettings={formSettings} ref={formRef} defaultValue={item} />
-      <Button
-        disabled={isSaving}
-        onClick={() => {
-          let inputs = formRef.current?.getInputValue()
-          onSaving(inputs)
-        }}
-      >
-        登録
-      </Button>
+      {isLoad && (
+        <>
+          <FormBuilder formSettings={formSettings} ref={formRef} defaultValue={item} />
+          <Button
+            disabled={isSaving}
+            onClick={() => {
+              let inputs = formRef.current?.getInputValue()
+              onSaving(inputs)
+            }}
+          >
+            登録
+          </Button>
+        </>
+      )}
     </>
   )
 }

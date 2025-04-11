@@ -107,6 +107,7 @@ export const useEditItem = ({ baseEndpoint, onSuccess = () => {}, onError = () =
   const { onExec, abort } = useApiExec()
   const [item, setItem] = useState(defaultValue)
   const endpoint = baseEndpoint + id + '/edit'
+  const [isLoad, setIsLoad] = useState(typeof id === 'undefined')
   let init = false
 
   useEffect(() => {
@@ -126,6 +127,9 @@ export const useEditItem = ({ baseEndpoint, onSuccess = () => {}, onError = () =
     onExec({
       endpoint: endpoint,
       status: 200,
+      onBefore: () => {
+        setIsLoad(false)
+      },
       onSuccess: ({ data }) => {
         onSuccess(data)
         setItem(data.payload.data)
@@ -136,10 +140,13 @@ export const useEditItem = ({ baseEndpoint, onSuccess = () => {}, onError = () =
       onError: () => {
         onError()
       },
+      onAfter: () => {
+        setIsLoad(true)
+      },
     })
   }
 
-  return { id, item, findItem }
+  return { id, item, isLoad, findItem }
 }
 
 export const useDeleteItem = ({ baseEndpoint, deletePath = '' }) => {
