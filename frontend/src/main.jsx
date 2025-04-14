@@ -5,6 +5,7 @@ import './index.css'
 import App from './App.jsx'
 import { Col, Container, Nav, Navbar, Row } from 'react-bootstrap'
 import { routes } from './routes/routes.js'
+import config from './config/configLoader.js'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -30,7 +31,7 @@ createRoot(document.getElementById('root')).render(
           <HashRouter>
             <Routes>
               {routes.map((route, key) => {
-                return <Route path={route.path} element={<route.element />} key={key} />
+                return <Route path={route.path} element={<route.element config={config} />} key={key} />
               })}
               <Route path={'/'} element={<App />} />
             </Routes>

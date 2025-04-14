@@ -18,6 +18,9 @@ import { Form as Step2_1_Field_Form } from '../pages/step2_1/field/Form.jsx'
 import { Index as Step2_2_Index } from '../pages/step2_2/Index.jsx'
 import { Form as Step2_2_Form } from '../pages/step2_2/Form.jsx'
 
+// step2_3
+import { Form as Step2_3_Form } from '../pages/step2_3/Form.jsx'
+
 export const routes = [
   { path: '/', element: App, name: 'Top', menu: true },
   // step1_2
@@ -34,8 +37,10 @@ export const routes = [
   { path: '/step2_1/:modelId/field/', element: Step2_1_Field_Index, name: 'Step2-1', menu: false },
   { path: '/step2_1/:modelId/field/new/', element: Step2_1_Field_Form, name: 'Step2-1', menu: false },
   { path: '/step2_1/:modelId/field/:id/', element: Step2_1_Field_Form, name: 'Step2-1', menu: false },
-  // step2_1
+  // step2_2
   { path: '/step2_2/', element: Step2_2_Index, name: 'Step2-2', menu: true },
   { path: '/step2_2/new/', element: Step2_2_Form, name: 'Step2-2', menu: false },
   { path: '/step2_2/:id/', element: Step2_2_Form, name: 'Step2-2', menu: false },
+  // step2_3
+  { path: '/step2_3/', element: Step2_3_Form, name: 'Step2-3', menu: true },
 ]
