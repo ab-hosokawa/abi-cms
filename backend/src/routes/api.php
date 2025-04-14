@@ -96,6 +96,7 @@ Route::prefix('/web')->group(function() {
 
         // 全件取得
         Route::get('/2/model/posts', [Api\Step2_2\WebsiteController::class, 'modelPosts']);
+        Route::get('/2/field/posts', [Api\Step2_2\WebsiteController::class, 'fieldPosts']);
 
         // 2
         Route::get('/2/{alias}', [Api\Step2_2\WebsiteController::class, 'index']);

@@ -101,8 +101,25 @@ class WebsiteController extends Controller
 
     public function modelPosts()
     {
+        $contents = [];
+        $posts = Model::all();
+
+        foreach($posts as $post) {
+            $fields = Field::where('model_id', $post->id)->get();
+            $contents[] = [
+                'model' => $post,
+                'fields' => $fields
+            ];
+        }
         return response()->json([
-            'contents' => Model::all()
+            'contents' => $contents,
+        ]);
+    }
+
+    public function fieldPosts()
+    {
+        return response()->json([
+          'contents' => Field::all(),
         ]);
     }
 }
