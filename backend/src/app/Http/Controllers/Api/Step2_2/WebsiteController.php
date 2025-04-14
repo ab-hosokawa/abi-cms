@@ -98,4 +98,11 @@ class WebsiteController extends Controller
 
         }
     }
+
+    public function modelPosts()
+    {
+        return response()->json([
+            'contents' => Model::all()
+        ]);
+    }
 }

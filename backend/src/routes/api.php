@@ -93,8 +93,14 @@ Route::prefix('/web')->group(function() {
     });
     // STEP2
     Route::prefix('/step2')->group(function() {
+
+        // 全件取得
+        Route::get('/2/model/posts', [Api\Step2_2\WebsiteController::class, 'modelPosts']);
+
         // 2
         Route::get('/2/{alias}', [Api\Step2_2\WebsiteController::class, 'index']);
         Route::get('/2/{alias}/{id}', [Api\Step2_2\WebsiteController::class, 'show']);
+
+
     });
 });
