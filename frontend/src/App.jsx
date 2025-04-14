@@ -2,6 +2,7 @@ import './App.css'
 import { Heading } from './utils/components/parts/Heading.jsx'
 
 function App() {
+  console.log(import.meta.env)
   return (
     <>
       <Heading title={'Dashboard'} />
