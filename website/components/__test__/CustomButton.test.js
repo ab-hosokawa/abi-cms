@@ -1,7 +1,7 @@
 // CustomButton.test.js
 import { render, screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import CustomButton from '../CustomButton.jsx';
+import CustomButton from 'components/atoms/CustomButton.jsx';
 
 describe('CustomButtonコンポーネント', () => {
   // 基本的なレンダリングテスト

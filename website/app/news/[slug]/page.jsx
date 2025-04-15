@@ -1,5 +1,5 @@
 import { fetchServerSide } from '@/lib/utils/api';
-import DynamicPageStep1 from '@/components/organisms/templates/DynamicPageStep1.jsx';
+import DynamicPageStep2 from '@/components/organisms/templates/DynamicPageStep2.jsx';
 import { API_PATHS } from '@/lib/utils/const.js';
 
 export async function generateMetadata({ params }) {
@@ -23,7 +23,7 @@ export async function generateMetadata({ params }) {
 
 async function getDynamicPageData() {
   // スラグを使って動的にエンドポイントを構築
-  return fetchServerSide(API_PATHS.step1);
+  return fetchServerSide(API_PATHS.news);
 }
 
 export default async function Page({ params }) {
@@ -42,5 +42,5 @@ export default async function Page({ params }) {
       return null;
     }
   };
-  return <DynamicPageStep1 slug={slug} data={dataDetail()} />;
+  return <DynamicPageStep2 slug={slug} data={dataDetail()} />;
 }
