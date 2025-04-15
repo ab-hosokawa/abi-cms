@@ -33,9 +33,43 @@ jobs:
 
           docker exec cms_frontend npm install || exit 1
 
+          # websiteコンテナを完全に再ビルド
+          docker-compose build --no-cache website
+          docker-compose up -d website
+          docker image prune -a -f # 利用していないimageを削除
+          sleep 10
+
+          # コンテナを再起動
+          # docker-compose restart
+          # websiteのみ
+          docker restart website
+          # reverse-proxyのみ
+          docker-compose restart reverse-proxy
+          sleep 10
+
           #コンテナの状態確認
           docker ps
           docker image ls
+          # docker ps | grep website
+          # docker logs reverse-proxy
+          docker exec website node -v
+          docker exec website npm -v
+          docker logs website
+          # docker exec website ps aux | grep node
+
+          # nextjs用のpackageを再インストール
+          # docker exec website npm cache clean --force
+          # sleep 10
+          # docker exec website rm -rf node_modules
+          # sleep 5
+          # docker exec website rm -f package-lock.json
+          # sleep 2
+          # docker exec website npm install
+          # sleep 10
+
+          # Nginxのログ確認
+          # docker exec reverse-proxy ls -la /var/log/nginx/
+          # docker exec reverse-proxy cat /var/log/nginx/error.log
 
           cd ./backend/src/
 
