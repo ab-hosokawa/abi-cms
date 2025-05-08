@@ -1,0 +1,30 @@
+<?php
+
+namespace App\Mod\{{name}}\Tests\Feature\Front;
+
+use App\Mod\{{name}}\Domain\Models\{{name}};
+use Illuminate\Testing\TestResponse;
+use Tests\Feature\AbstractFeatureTest;
+
+class {{name}}FrontDetailTest extends AbstractFeatureTest
+{
+    public function test_detail(): void
+    {
+        // データ作成
+        $post = {{name}}::factory()->create();
+
+        $testResponse = $this->apiExec(['id' => $post->id]);
+        $testResponse->assertStatus(200);
+        $testResponse->assertJson([
+            'contents' => [
+                'title' => $post->title
+            ]
+        ]);
+    }
+
+    protected function apiExec(array $params = [], array $data = [], array $headers = []): TestResponse
+    {
+        // TODO: Implement apiExec() method.
+        return $this->get($this->getUrl('api.{{name_lower}}.front.detail', $params), $headers);
+    }
+}

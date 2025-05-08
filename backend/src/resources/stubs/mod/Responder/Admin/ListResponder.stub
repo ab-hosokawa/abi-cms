@@ -1,0 +1,9 @@
+<?php
+namespace App\Mod\{{name}}\Responder\Admin;
+
+use App\Http\Responder\BaseResponder;
+
+class ListResponder extends BaseResponder
+{
+    protected $statusCode = 200;
+}

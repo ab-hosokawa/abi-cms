@@ -1,0 +1,32 @@
+<?php
+
+namespace App\Mod\{{name}}\Tests\Feature\Admin;
+
+use App\Mod\{{name}}\Domain\Models\{{name}};
+use Illuminate\Testing\TestResponse;
+use Tests\Feature\AbstractFeatureTest;
+
+class {{name}}AdminDetailTest extends AbstractFeatureTest
+{
+    public function test_detail(): void
+    {
+        // データ作成
+        $post = {{name}}::factory()->create();
+
+        $testResponse = $this->apiExec(['id' => $post->id]);
+        $testResponse->assertStatus(200);
+        $testResponse->assertJson([
+            'payload' => [
+                'data' => [
+                    'title' => $post->title
+                ]
+            ]
+        ]);
+    }
+
+    protected function apiExec(array $params = [], array $data = [], array $headers = []): TestResponse
+    {
+        // TODO: Implement apiExec() method.
+        return $this->get($this->getUrl('api.{{name_lower}}.admin.detail', $params), $headers);
+    }
+}

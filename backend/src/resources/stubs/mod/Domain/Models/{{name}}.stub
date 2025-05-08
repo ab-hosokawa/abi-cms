@@ -1,0 +1,18 @@
+<?php
+namespace App\Mod\{{name}}\Domain\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+/**
+ * @property int $id
+ * @property string $title
+ * @property string $body
+ */
+class {{name}} extends Model
+{
+    use HasFactory;
+
+    protected $table = "{{name_lower}}";
+    protected $fillable = ['title'];
+}

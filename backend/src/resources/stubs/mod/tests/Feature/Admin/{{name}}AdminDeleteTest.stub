@@ -1,0 +1,27 @@
+<?php
+
+namespace App\Mod\{{name}}\Tests\Feature\Admin;
+
+use App\Mod\{{name}}\Domain\Models\{{name}};
+use Illuminate\Testing\TestResponse;
+use Tests\Feature\AbstractFeatureTest;
+
+class {{name}}AdminDeleteTest extends AbstractFeatureTest
+{
+    public function test_delete(): void
+    {
+        $post = {{name}}::factory()->create();
+        $this->assertEquals(1, {{name}}::count());
+
+        $testResponse = $this->apiExec(['id' => $post->id]);
+        $testResponse->assertStatus(204);
+
+        $this->assertEquals(0, {{name}}::count());
+    }
+
+    protected function apiExec(array $params = [], array $data = [], array $headers = []): TestResponse
+    {
+        // TODO: Implement apiExec() method.
+        return $this->delete($this->getUrl('api.{{name_lower}}.admin.delete', $params), $data, $headers);
+    }
+}

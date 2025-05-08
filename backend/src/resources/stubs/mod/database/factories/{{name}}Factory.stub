@@ -1,0 +1,17 @@
+<?php
+namespace App\Mod\{{name}}\Database\Factories;
+
+use App\Mod\{{name}}\Domain\Models\{{name}};
+use Illuminate\Database\Eloquent\Factories\Factory;
+
+class {{name}}Factory extends Factory
+{
+    protected $model = {{name}}::class;
+
+    public function definition(): array
+    {
+        return [
+            'title' => $this->faker->word
+        ];
+    }
+}

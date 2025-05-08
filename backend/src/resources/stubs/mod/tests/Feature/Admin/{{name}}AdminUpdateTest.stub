@@ -1,0 +1,31 @@
+<?php
+
+namespace App\Mod\{{name}}\Tests\Feature\Admin;
+
+use App\Mod\{{name}}\Domain\Models\{{name}};
+use Illuminate\Testing\TestResponse;
+use Tests\Feature\AbstractFeatureTest;
+
+class {{name}}AdminUpdateTest extends AbstractFeatureTest
+{
+
+    public function test_update(): void
+    {
+        // データ作成
+        $updateData = {{name}}::factory()->create()->toArray();
+        $updateData['title'] = $updateData['title'] . ' edit';
+
+        $testResponse = $this->apiExec(['id' => $updateData['id']], $updateData);
+        $testResponse->assertStatus(204);
+
+        // 更新確認
+        $post = {{name}}::find($updateData['id']);
+        $this->assertEquals($updateData['title'], $post->title);
+    }
+
+    protected function apiExec(array $params = [], array $data = [], array $headers = []): TestResponse
+    {
+        // TODO: Implement apiExec() method.
+        return $this->put($this->getUrl('api.{{name_lower}}.admin.update', $params), $data, $headers);
+    }
+}
