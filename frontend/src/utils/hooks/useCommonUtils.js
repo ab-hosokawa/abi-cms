@@ -70,7 +70,7 @@ export const useRegisterItem = ({
   updatePath = '',
 }) => {
   const { id } = useParams()
-  const endpoint = id ? baseEndpoint + id + updatePath : baseEndpoint + 'store'
+  const endpoint = id ? baseEndpoint + 'update/' + id + updatePath : baseEndpoint + 'store'
   const method = id ? 'put' : 'post'
   const status = id ? 204 : 201
   const { onExec } = useApiExec()
@@ -106,7 +106,7 @@ export const useEditItem = ({ baseEndpoint, onSuccess = () => {}, onError = () =
   const { id } = useParams()
   const { onExec, abort } = useApiExec()
   const [item, setItem] = useState(defaultValue)
-  const endpoint = baseEndpoint + id + '/edit'
+  const endpoint = baseEndpoint + 'detail/' + id
   const [isLoad, setIsLoad] = useState(typeof id === 'undefined')
   let init = false
 
