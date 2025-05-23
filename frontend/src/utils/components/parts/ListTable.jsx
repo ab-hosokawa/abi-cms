@@ -20,7 +20,7 @@ export const ListTable = ({ columns = [], items = [], scopedColumns = {}, tableP
         <tbody>
           {items.map((item, row) => {
             return (
-              <tr key={row}>
+              <tr key={row} id={`row-${item.id}`}>
                 {React.Children.toArray(
                   columns.map((column, idx) => {
                     if (typeof scopedColumns[column.key] !== 'undefined') {
