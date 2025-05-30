@@ -6,7 +6,7 @@ import { config } from '../config.js'
 export const useForm = () => {
   const formRef = useRef()
   const { navigateTo } = useNavigation()
-  const baseEndpoint = '/api/article/admin/'
+  const baseEndpoint = '/api/' + config.mod_name + '/admin/'
   const formSettings = [{ formId: 'form-title', name: 'title', label: 'タイトル' }]
   const { item } = useEditItem({ baseEndpoint })
   const { isSaving, onSaving } = useRegisterItem({

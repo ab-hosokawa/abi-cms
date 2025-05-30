@@ -32,6 +32,14 @@ test.describe('edit test', () => {
     await expect(formItem).toHaveValue(item.title)
   })
 
+  // 戻るボタンテスト
+  test('go to list page', async ({ page }) => {
+    await init(page)
+    const button = await page.getByRole('button', { name: naming.button.back })
+    await button.click()
+    await expect(page.getByRole('heading', { name: naming.heading.list })).toBeVisible()
+  })
+
   // 記事編集テスト
   test('save update success', async ({ page }) => {
     await init(page)

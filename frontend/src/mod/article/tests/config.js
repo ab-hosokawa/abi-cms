@@ -16,6 +16,7 @@ export const naming = {
     edit: '編集',
     delete: '削除',
     save: '登録',
+    back: '戻る',
   },
   message: {
     delete_confirm: '削除しますか？',

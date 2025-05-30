@@ -21,6 +21,14 @@ test.describe('new test', () => {
     await expect(page.getByRole('heading', { name: naming.heading.new })).toBeVisible()
   })
 
+  // 戻るボタンテスト
+  test('go to list page', async ({ page }) => {
+    await init(page)
+    const button = await page.getByRole('button', { name: naming.button.back })
+    await button.click()
+    await expect(page.getByRole('heading', { name: naming.heading.list })).toBeVisible()
+  })
+
   // 記事登録テスト
   test('save store success', async ({ page }) => {
     await init(page)
